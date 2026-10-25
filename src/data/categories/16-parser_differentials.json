@@ -1,0 +1,99 @@
+{
+  "id": "parser_differentials",
+  "title": "Encoding, Normalization & Parser Differentials",
+  "description": "Different interpretations of the same input across browsers, proxies, and servers.",
+  "icon_key": "injection",
+  "attacks": [
+    {
+      "name": "Double URL encoding",
+      "notes": "%252e%252e/",
+      "desc": "Encoding a path twice can bypass a filter that decodes only once while a later layer decodes again.",
+      "prevention": "Decode and normalize once at a defined boundary, then validate the canonical value used by routing and file access."
+    },
+    {
+      "name": "Overlong UTF-8",
+      "notes": "%c0%ae",
+      "desc": "Invalid or overlong UTF-8 may be interpreted differently by validation and routing components.",
+      "prevention": "Reject invalid UTF-8 rather than allowing different components to repair or decode it differently."
+    },
+    {
+      "name": "Unicode normalization",
+      "notes": "Fullwidth ／, NFKC collision",
+      "desc": "Unicode normalization can make distinct-looking strings compare equal after validation has already occurred.",
+      "prevention": "Normalize identifiers consistently before validation and comparison, including Unicode normalization rules."
+    },
+    {
+      "name": "Homoglyph bypass",
+      "notes": "аdmin (Cyrillic а)",
+      "desc": "Lookalike characters can evade literal string checks while appearing identical to a reader.",
+      "prevention": "Use normalized machine identifiers for authorization and warn users about deceptive lookalike display names."
+    },
+    {
+      "name": "Path confusion",
+      "notes": "; %00 /./ // trailing .",
+      "desc": "Different path parsers may disagree about separators, semicolons, nulls, dots, or duplicate slashes.",
+      "prevention": "Resolve canonical paths before policy checks and reject alternate path forms that change the backend target."
+    },
+    {
+      "name": "Matrix parameters",
+      "notes": "/admin;x=y",
+      "desc": "Semicolon-delimited matrix parameters can change route matching when intermediaries and frameworks parse them differently.",
+      "prevention": null
+    },
+    {
+      "name": "Case sensitivity bypass",
+      "notes": "/ADMIN, /Admin",
+      "desc": "Case differences in a path may bypass a case-sensitive check when another layer treats paths case-insensitively.",
+      "prevention": null
+    },
+    {
+      "name": "Content-Type confusion",
+      "notes": "JSON body sent as form-urlencoded",
+      "desc": "A declared Content-Type that does not match the body can trigger different parsers or validation rules.",
+      "prevention": null
+    },
+    {
+      "name": "X-HTTP-Method-Override",
+      "notes": "POST + override: DELETE",
+      "desc": "A method-override header can turn an allowed POST into a different backend action if authorization is inconsistent.",
+      "prevention": null
+    },
+    {
+      "name": "MIME sniffing",
+      "notes": "No X-Content-Type-Options",
+      "desc": "Without a no-sniff policy, browsers may interpret a response as executable content despite its declared MIME type.",
+      "prevention": null
+    },
+    {
+      "name": "Multipart boundary abuse",
+      "notes": "Malformed boundary parsing",
+      "desc": "Malformed multipart boundaries can cause upload validators and application parsers to extract different content.",
+      "prevention": null
+    },
+    {
+      "name": "JSON parser differential",
+      "notes": "Duplicate keys, __proto__, huge numbers",
+      "desc": "Duplicate JSON keys and unusual values can produce different objects in different parsers.",
+      "prevention": null
+    },
+    {
+      "name": "Null byte injection",
+      "notes": "file.php%00.jpg",
+      "desc": "A null byte can truncate a value in one component while another component retains the full string.",
+      "prevention": null
+    },
+    {
+      "name": "Type juggling",
+      "notes": "0e123 vs 0e456, 1 == \"1\"",
+      "desc": "Loose type comparison can treat distinct values as equal and bypass checks that expect exact matches.",
+      "prevention": null
+    },
+    {
+      "name": "Wildcard/glob abuse",
+      "notes": "* in filter params",
+      "desc": "Wildcard characters in filters can broaden a lookup or match more records than the caller intended.",
+      "prevention": null
+    }
+  ],
+  "order": 16
+}

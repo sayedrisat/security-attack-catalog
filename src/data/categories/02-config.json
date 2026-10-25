@@ -1,0 +1,165 @@
+{
+  "id": "config",
+  "title": "Configuration & Deployment",
+  "description": "Vulnerabilities arising from insecure defaults, incomplete hardening, improper headers, framework misconfigurations, and proxy/cache behaviors.",
+  "icon": "sliders",
+  "attacks": [
+    {
+      "name": "Missing security headers",
+      "notes": "HSTS, CSP, X-Frame-Options",
+      "desc": "Failing to deploy browser-hardening HTTP headers (Strict-Transport-Security, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options), leaving users vulnerable to downgrade and embedding attacks.",
+      "prevention": "Set appropriate HSTS, CSP, frame protection, and content-type headers for each response, then test them in production."
+    },
+    {
+      "name": "Weak CSP / CSP bypass",
+      "notes": "unsafe-inline, unsafe-eval",
+      "desc": "Implementing overly permissive Content Security Policies containing wildcards (*), unsafe-inline, unsafe-eval, or trusted CDNs hosting JSONP endpoints, allowing script injection past policy barriers.",
+      "prevention": "Use a restrictive CSP with nonces or hashes, avoid broad sources and unsafe-inline, and review trusted third-party scripts."
+    },
+    {
+      "name": "Clickjacking / UI redressing",
+      "notes": "iframe overlay",
+      "desc": "Overlaying a transparent malicious UI layer over a legitimate application inside an iframe to trick authenticated users into executing unintended privileged clicks or transfers.",
+      "prevention": "Deny framing with CSP frame-ancestors unless a specific origin needs it; protect sensitive actions with confirmation where appropriate."
+    },
+    {
+      "name": "TLS misconfiguration",
+      "notes": "weak ciphers, protocols",
+      "desc": "Permitting obsolete cryptographic suites (DES, RC4, 3DES) or legacy protocols (SSLv3, TLS 1.0, TLS 1.1) vulnerable to cipher downgrade and eavesdropping attacks.",
+      "prevention": "Disable obsolete TLS versions and weak ciphers, and use a maintained server configuration with regular scans."
+    },
+    {
+      "name": "Expired / self-signed cert",
+      "notes": "trust chain failure",
+      "desc": "Using expired, self-signed, or improperly signed TLS certificates that degrade cryptographic trust, triggering browser warnings and enabling man-in-the-middle attacks.",
+      "prevention": "Automate certificate issuance and renewal, monitor expiry, and install a valid chain from a trusted issuer."
+    },
+    {
+      "name": "HTTP methods enabled",
+      "notes": "PUT, DELETE, TRACE, OPTIONS",
+      "desc": "Exposing dangerous HTTP verbs (such as PUT allowing arbitrary file creation, DELETE for unauthenticated removal, or TRACE permitting Cross-Site Tracing attacks against cookies).",
+      "prevention": "Allow only methods each route needs, and apply the same authentication and authorization checks to every method."
+    },
+    {
+      "name": "Directory listing enabled",
+      "notes": "automatic index",
+      "desc": "Leaving web server directory index generation active (e.g. Apache mod_autoindex), allowing visitors to browse arbitrary folders and access source files, backups, and confidential records.",
+      "prevention": "Disable directory indexes and serve only intended assets from the document root."
+    },
+    {
+      "name": "Default credentials",
+      "notes": "admin/admin, root/root",
+      "desc": "Deploying commercial software, administrative routers, IoT appliances, or framework dashboards with factory-default usernames and passwords unchanged.",
+      "prevention": "Replace factory credentials before deployment, disable unused default accounts, and require unique strong administrator credentials."
+    },
+    {
+      "name": "Default files exposed",
+      "notes": "phpinfo, install.php, test.php",
+      "desc": "Leaving sample scripts, environment diagnostics (phpinfo.php), and installation wizards accessible in production, leaking server configuration details and permitting unauthorized re-installation.",
+      "prevention": "Remove install, sample, and diagnostic files from production; restrict any necessary diagnostics to trusted operators."
+    },
+    {
+      "name": "Exposed admin panels",
+      "notes": "/admin, /manager, /wp-admin",
+      "desc": "Allowing public Internet access to administrative interfaces without network-level restrictions, VPN segmentation, or multi-factor authentication requirements.",
+      "prevention": null
+    },
+    {
+      "name": "Debug endpoints exposed",
+      "notes": "/debug, /actuator, /_profiler",
+      "desc": "Failing to restrict developer debugging endpoints (such as Spring Boot /actuator, Symfony /_profiler, or Django debug routes), leaking thread dumps, environment secrets, and memory data.",
+      "prevention": null
+    },
+    {
+      "name": "Verbose errors / stack traces",
+      "notes": "debug leaks",
+      "desc": "Displaying detailed application exception traces, framework versions, database queries, and source code excerpts to end users upon application errors.",
+      "prevention": null
+    },
+    {
+      "name": "CORS misconfiguration",
+      "notes": "Access-Control-Allow-Origin: * + creds",
+      "desc": "Configuring Cross-Origin Resource Sharing with reflection of arbitrary Origin headers combined with 'Access-Control-Allow-Credentials: true', enabling cross-site exfiltration of private data.",
+      "prevention": null
+    },
+    {
+      "name": "Cookie attribute flaws",
+      "notes": "missing Secure/HttpOnly/SameSite",
+      "desc": "Issuing session tokens without the Secure flag (permitting cleartext transmission), HttpOnly flag (enabling XSS theft), or SameSite flag (allowing CSRF exploitation).",
+      "prevention": null
+    },
+    {
+      "name": "Cache-control weaknesses",
+      "notes": "missing no-store / private",
+      "desc": "Failing to set strict Cache-Control directives on authenticated pages, causing intermediate proxies or shared browser histories to store sensitive personal and financial data.",
+      "prevention": null
+    },
+    {
+      "name": "Host header injection",
+      "notes": "poisoning web routing",
+      "desc": "Manipulating the HTTP Host header in requests to poison dynamically generated links, password reset URLs, cache keys, or internal routing mechanisms.",
+      "prevention": null
+    },
+    {
+      "name": "HTTP request smuggling",
+      "notes": "CL.TE, TE.CL, TE.TE",
+      "desc": "Exploiting discrepancies between front-end reverse proxies and backend application servers in parsing Content-Length and Transfer-Encoding headers, allowing request hijacking and credential theft.",
+      "prevention": null
+    },
+    {
+      "name": "HTTP response splitting",
+      "notes": "CRLF in response",
+      "desc": "Injecting Carriage Return and Line Feed (CRLF) characters into HTTP response headers to split the response into two messages, enabling cache poisoning and XSS.",
+      "prevention": null
+    },
+    {
+      "name": "Web cache poisoning",
+      "notes": "unkeyed input abuse",
+      "desc": "Injecting malicious payloads via unkeyed HTTP headers or query parameters that get permanently stored by an intermediate cache and served to unsuspecting subsequent visitors.",
+      "prevention": null
+    },
+    {
+      "name": "Web cache deception",
+      "notes": "path confusion caching",
+      "desc": "Tricking an authenticated victim into accessing an endpoint with an appended static file extension (e.g. /account.json/profile.css), causing edge caches to store and expose dynamic private user data.",
+      "prevention": null
+    },
+    {
+      "name": "CDN / WAF misconfiguration",
+      "notes": "origin IP leak",
+      "desc": "Failing to firewall direct inbound traffic to the origin web server, allowing attackers to discover the true backend IP address and bypass all CDN and WAF security filters.",
+      "prevention": null
+    },
+    {
+      "name": "WAF fingerprinting & bypass",
+      "notes": "encoding, chunking tricks",
+      "desc": "Detecting specific Web Application Firewall vendors and employing character encoding, chunked transfer encoding, or payload evasion techniques to slip malicious commands past detection engines.",
+      "prevention": null
+    },
+    {
+      "name": "Open cloud storage buckets",
+      "notes": "public read/write permissions",
+      "desc": "Leaving AWS S3, Azure Blob, or Google Cloud Storage buckets configured with public read or write access, exposing customer records or allowing arbitrary file tampering.",
+      "prevention": null
+    },
+    {
+      "name": "Git history secrets",
+      "notes": "orphaned commits",
+      "desc": "Leaving API keys, passwords, and private certificates in historical git commits even after removing them from the head branch, discoverable via git reflogs and history scrapers.",
+      "prevention": null
+    },
+    {
+      "name": "Framework debug mode",
+      "notes": "Django DEBUG=True, Laravel ignition",
+      "desc": "Running production applications with framework debug flags enabled, rendering interactive error pages with full system environment variables and execution context.",
+      "prevention": null
+    },
+    {
+      "name": "RCE via exposed debug console",
+      "notes": "Werkzeug, Laravel Ignition",
+      "desc": "Exploiting interactive developer consoles exposed in production (such as the Werkzeug PIN console or Laravel Ignition facade) to execute arbitrary code directly on the host server.",
+      "prevention": null
+    }
+  ],
+  "order": 2
+}

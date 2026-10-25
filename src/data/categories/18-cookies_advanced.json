@@ -1,0 +1,45 @@
+{
+  "id": "cookies_advanced",
+  "title": "Cookie Attacks",
+  "description": "Cookie scope, precedence, and limits that can affect authenticated sessions.",
+  "icon_key": "session",
+  "attacks": [
+    {
+      "name": "Cookie tossing",
+      "notes": "Set cookie from sub.target.com for target.com",
+      "desc": "A sibling subdomain can set a parent-domain cookie that competes with an application cookie.",
+      "prevention": "Use host-only cookies with the __Host- prefix for sensitive sessions and avoid broad Domain scope."
+    },
+    {
+      "name": "Cookie shadowing",
+      "notes": "Path-scoped shadow cookie",
+      "desc": "A more specific cookie path can shadow a same-named cookie and change which value the server uses.",
+      "prevention": "Give session cookies unique names and narrow paths; parse duplicate names deterministically and reject ambiguity."
+    },
+    {
+      "name": "Cookie jar overflow",
+      "notes": "Browser cookie limits and eviction behavior",
+      "desc": "Adding many cookies may evict important cookies from the browser jar and alter session behavior.",
+      "prevention": null
+    },
+    {
+      "name": "Subdomain cookie injection",
+      "notes": "Eligible subdomain can set a parent Domain cookie",
+      "desc": "A compromised subdomain can set parent-domain cookies when cookie scope permits it.",
+      "prevention": null
+    },
+    {
+      "name": "Cookie name collision",
+      "notes": "Duplicate names, first vs last wins",
+      "desc": "Duplicate cookie names can be resolved differently by a browser, proxy, and application.",
+      "prevention": null
+    },
+    {
+      "name": "Overlong cookie",
+      "notes": "Server truncation",
+      "desc": "Oversized cookies may be truncated or rejected differently across components.",
+      "prevention": null
+    }
+  ],
+  "order": 18
+}

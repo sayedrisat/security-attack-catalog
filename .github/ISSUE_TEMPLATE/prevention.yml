@@ -1,0 +1,31 @@
+name: Add prevention guidance
+description: Suggest a concrete defense for an entry that needs one.
+title: "Prevention: "
+body:
+  - type: input
+    id: attack
+    attributes:
+      label: Attack name and section
+      placeholder: Attack name — section name
+    validations:
+      required: true
+  - type: textarea
+    id: prevention
+    attributes:
+      label: Prevention guidance
+      description: State the control, where it belongs, and what it must enforce.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Supporting source
+      description: Link a standard, official guidance, maintained security guide, or original research.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: caveat
+    attributes:
+      label: Stack-specific caveats
+      description: Mention conditions or tradeoffs if the defense is not universal.

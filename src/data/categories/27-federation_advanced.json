@@ -1,0 +1,81 @@
+{
+  "id": "federation_advanced",
+  "title": "OAuth / OIDC / WebAuthn Advanced",
+  "description": "Identity federation, token validation, and passkey fallback risks.",
+  "icon_key": "auth",
+  "attacks": [
+    {
+      "name": "PKCE downgrade",
+      "notes": "Remove code_challenge",
+      "desc": "Dropping a PKCE challenge or accepting a weaker flow can allow interception of an authorization code.",
+      "prevention": "Require PKCE for public clients and reject authorization requests or token exchanges missing the expected challenge."
+    },
+    {
+      "name": "OAuth mix-up attack",
+      "notes": "Confused deputy between IdPs",
+      "desc": "OAuth mix-up confuses which identity provider issued a response when a client supports multiple providers.",
+      "prevention": "Bind the authorization response to the chosen identity provider and verify issuer and state before accepting tokens."
+    },
+    {
+      "name": "Device flow phishing",
+      "notes": "user_code social engineering",
+      "desc": "An attacker can trick a user into entering a device-flow code that authorizes the attacker's session.",
+      "prevention": "Explain device-code approvals clearly, limit code lifetime, and require users to verify the requesting app and context."
+    },
+    {
+      "name": "Dynamic client registration abuse",
+      "notes": "Register malicious client",
+      "desc": "Permissive dynamic registration can allow an attacker-controlled OAuth client with unsafe redirect behavior.",
+      "prevention": "Restrict client registration to trusted administrators or enforce strict redirect URI and client metadata policy."
+    },
+    {
+      "name": "OIDC id_token validation flaws",
+      "notes": "aud, iss, nonce unchecked",
+      "desc": "An OIDC client must validate the ID token's issuer, audience, signature, expiry, and nonce where applicable.",
+      "prevention": null
+    },
+    {
+      "name": "Implicit flow token leak",
+      "notes": "Token in URL fragment exposed to scripts or browser state",
+      "desc": "Implicit-flow tokens in URL fragments can be exposed to client-side scripts or browser state; fragments are not normally sent in Referer headers.",
+      "prevention": null
+    },
+    {
+      "name": "redirect_uri wildcard abuse",
+      "notes": "*.target.com bypass",
+      "desc": "Broad redirect URI matching can send authorization responses to an attacker-controlled subdomain or path.",
+      "prevention": null
+    },
+    {
+      "name": "Token replay",
+      "notes": "Reuse code",
+      "desc": "Reusing a consumed authorization code or token can create duplicate access if replay protections fail.",
+      "prevention": null
+    },
+    {
+      "name": "Scope escalation",
+      "notes": "Request higher scope",
+      "desc": "A client or resource server may grant more permissions than consented when scopes are not validated consistently.",
+      "prevention": null
+    },
+    {
+      "name": "WebAuthn bypass",
+      "notes": "Origin check, rpId mismatch",
+      "desc": "WebAuthn assertions must match the expected origin and relying-party identifier.",
+      "prevention": null
+    },
+    {
+      "name": "Passkey downgrade",
+      "notes": "Fallback to password",
+      "desc": "A weak fallback path can bypass the protection provided by passkeys.",
+      "prevention": null
+    },
+    {
+      "name": "Account linking takeover",
+      "notes": "Link unverified email",
+      "desc": "Linking identities by an unverified email address can attach an attacker account to a victim account.",
+      "prevention": null
+    }
+  ],
+  "order": 27
+}

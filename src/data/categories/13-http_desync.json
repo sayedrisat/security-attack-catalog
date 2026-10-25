@@ -1,0 +1,69 @@
+{
+  "id": "http_desync",
+  "title": "HTTP/2, HTTP/3 & Desync",
+  "description": "Protocol-level request parsing, stream handling, and proxy/backend disagreements.",
+  "icon_key": "config",
+  "attacks": [
+    {
+      "name": "H2C smuggling",
+      "notes": "Upgrade: h2c header diye frontend bypass",
+      "desc": "An h2c upgrade can create a parsing gap when a proxy and backend disagree on how the upgraded request is handled.",
+      "prevention": "Disable h2c upgrades where not required, and ensure the front end and backend agree on upgrade routing and authentication."
+    },
+    {
+      "name": "H2.CL desync",
+      "notes": "Content-Length mismatch over HTTP/2",
+      "desc": "A front end and backend may disagree about HTTP/2 body length when Content-Length is translated or checked differently.",
+      "prevention": "Patch and align HTTP/2 gateways so Content-Length and body framing are validated before translation to HTTP/1.1."
+    },
+    {
+      "name": "H2.TE desync",
+      "notes": "Transfer-Encoding over HTTP/2",
+      "desc": "Transfer-Encoding handling across an HTTP/2 gateway can desynchronize requests if the backend interprets the body differently.",
+      "prevention": "Reject forbidden or ambiguous transfer headers in HTTP/2 requests and keep gateway parsers updated."
+    },
+    {
+      "name": "CL.TE / TE.CL / TE.TE",
+      "notes": "Burp \"Smuggler\" extension diye",
+      "desc": "Conflicting message-length headers can cause a proxy and backend to assign bytes to different HTTP requests.",
+      "prevention": "Use consistent message-length parsing across proxies and origins, reject conflicting headers, and patch affected components."
+    },
+    {
+      "name": "HTTP/2 Rapid Reset",
+      "notes": "Stream cancel flood",
+      "desc": "Rapid HTTP/2 stream cancellation can consume server resources faster than they are released.",
+      "prevention": null
+    },
+    {
+      "name": "HPACK bomb",
+      "notes": "Compressed header expansion",
+      "desc": "A small HPACK header block can expand into large headers and exhaust decoder memory or CPU.",
+      "prevention": null
+    },
+    {
+      "name": "Request tunnelling",
+      "notes": "Request-in-request, Burp diye",
+      "desc": "A crafted request can carry another request through a proxy when framing rules differ between layers.",
+      "prevention": null
+    },
+    {
+      "name": "HTTP/3 / QUIC probes",
+      "notes": "udp 443, quiche client",
+      "desc": "QUIC and HTTP/3 endpoints may expose services or policy differences that are absent on TCP-based HTTP.",
+      "prevention": null
+    },
+    {
+      "name": "Client-side desync",
+      "notes": "Browser diye CSD payload",
+      "desc": "Browser-initiated requests can desynchronize a connection when the server leaves bytes for a subsequent request.",
+      "prevention": null
+    },
+    {
+      "name": "Connection state desync",
+      "notes": "Socket reuse test",
+      "desc": "Reused connections can carry stale parser state, allowing one request to affect how the next is interpreted.",
+      "prevention": null
+    }
+  ],
+  "order": 13
+}

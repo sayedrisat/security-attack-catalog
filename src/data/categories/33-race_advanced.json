@@ -1,0 +1,51 @@
+{
+  "id": "race_advanced",
+  "title": "Race Conditions Advanced",
+  "description": "Timing windows across concurrent requests and state transitions.",
+  "icon_key": "logic",
+  "attacks": [
+    {
+      "name": "Single-packet attack",
+      "notes": "HTTP/2, 20+ requests in one packet",
+      "desc": "Packing requests into one packet can align their arrival and expose race windows in state updates.",
+      "prevention": "Make state changes atomic and idempotent, so synchronized requests cannot both pass a single-use check."
+    },
+    {
+      "name": "Last-byte sync",
+      "notes": "TCP-level timing",
+      "desc": "Holding the final byte of requests can synchronize completion and reveal timing-dependent behavior.",
+      "prevention": "Avoid separate read-then-write checks; use database constraints or transactions to guard shared state."
+    },
+    {
+      "name": "Limit-overrun",
+      "notes": "Coupon, withdrawal, vote",
+      "desc": "Concurrent operations may exceed a one-time limit before a shared counter is updated.",
+      "prevention": null
+    },
+    {
+      "name": "Multi-endpoint race",
+      "notes": "Parallel across endpoints",
+      "desc": "Actions sent to different endpoints can race against the same underlying account or object state.",
+      "prevention": null
+    },
+    {
+      "name": "Partial construction race",
+      "notes": "Object mid-create",
+      "desc": "Another request may observe a partially created object before initialization or permissions finish.",
+      "prevention": null
+    },
+    {
+      "name": "Time-of-check-to-use",
+      "notes": "File upload, balance",
+      "desc": "A value can change between validation and use if the operation is not atomic.",
+      "prevention": null
+    },
+    {
+      "name": "Session race",
+      "notes": "Parallel login",
+      "desc": "Parallel login or session updates can leave inconsistent authentication state.",
+      "prevention": null
+    }
+  ],
+  "order": 33
+}

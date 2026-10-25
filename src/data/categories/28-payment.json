@@ -1,0 +1,81 @@
+{
+  "id": "payment",
+  "title": "Payment & Fraud",
+  "description": "Payment, subscription, and webhook workflow integrity.",
+  "icon_key": "logic",
+  "attacks": [
+    {
+      "name": "3D Secure bypass",
+      "notes": "Skip challenge, hit callback",
+      "desc": "If a payment callback is trusted without confirming the 3D Secure result, a challenge can be skipped.",
+      "prevention": "Verify payment success and 3D Secure status with the payment provider before granting goods or access."
+    },
+    {
+      "name": "Card testing (BIN attack)",
+      "notes": "Bulk small auths",
+      "desc": "Repeated low-value card authorizations can be used to test stolen payment card details.",
+      "prevention": "Use provider fraud controls, velocity limits, and monitoring for repeated low-value authorizations."
+    },
+    {
+      "name": "Webhook replay",
+      "notes": "Replay old valid webhook",
+      "desc": "Accepting the same signed webhook more than once can repeat an order, refund, or entitlement change.",
+      "prevention": "Verify webhook signatures, timestamps, and event IDs, and process each event idempotently."
+    },
+    {
+      "name": "Webhook signature absent",
+      "notes": "POST your own",
+      "desc": "A webhook without signature verification can be forged by anyone who can reach the endpoint.",
+      "prevention": "Require cryptographic webhook signature verification against a configured secret before changing payment state."
+    },
+    {
+      "name": "Idempotency key abuse",
+      "notes": "Same key, different amount",
+      "desc": "Reusing an idempotency key with a changed amount can cause inconsistent transaction state if requests are not bound to their contents.",
+      "prevention": null
+    },
+    {
+      "name": "Amount vs line-item mismatch",
+      "notes": "Total ≠ sum of items",
+      "desc": "When a total is trusted independently of line items, changing one side can alter the amount charged or credited.",
+      "prevention": null
+    },
+    {
+      "name": "Partial refund keeps full access",
+      "notes": "",
+      "desc": "A partial refund should update entitlements when access is tied to the refunded purchase.",
+      "prevention": null
+    },
+    {
+      "name": "Currency rounding abuse",
+      "notes": "0.01 rounding loops",
+      "desc": "Repeated currency conversion or rounding can accumulate an unintended monetary difference.",
+      "prevention": null
+    },
+    {
+      "name": "Negative line item",
+      "notes": "Add negative-price product",
+      "desc": "A negative-priced line item can reduce an order total if product and price controls are weak.",
+      "prevention": null
+    },
+    {
+      "name": "Plan downgrade keeps perks",
+      "notes": "Downgrade after upgrade",
+      "desc": "Subscription entitlements may persist after a downgrade if plan changes are not applied consistently.",
+      "prevention": null
+    },
+    {
+      "name": "Trial stacking",
+      "notes": "Cancel + resubscribe",
+      "desc": "Canceling and resubscribing may grant repeated trials when eligibility is not tied to the customer.",
+      "prevention": null
+    },
+    {
+      "name": "Invoice manipulation",
+      "notes": "Edit invoice ID",
+      "desc": "Editable invoice identifiers can change which record is viewed or paid if ownership is not enforced.",
+      "prevention": null
+    }
+  ],
+  "order": 28
+}

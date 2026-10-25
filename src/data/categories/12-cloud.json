@@ -1,0 +1,93 @@
+{
+  "id": "cloud",
+  "title": "Cloud & Supply Chain",
+  "description": "Exploitation of cloud identity access policies, serverless runtimes, container isolation escapes, CI/CD pipelines, and third-party dependencies.",
+  "icon": "cloud",
+  "attacks": [
+    {
+      "name": "S3 bucket misconfiguration",
+      "notes": "public read/write ACLs",
+      "desc": "Misconfiguring AWS S3 bucket policies or Access Control Lists to allow public anonymous read, list, or write permissions, exposing proprietary objects or hosting malicious files.",
+      "prevention": "Block public access by default, require least-privilege bucket policies, and review S3 access analyzer findings."
+    },
+    {
+      "name": "GCS bucket misconfiguration",
+      "notes": "allUsers / allAuthenticatedUsers",
+      "desc": "Granting Storage Object Viewer or Admin permissions to 'allUsers' or 'allAuthenticatedUsers' in Google Cloud Storage, leaking confidential corporate data.",
+      "prevention": "Use uniform bucket-level access where appropriate and deny anonymous reads or writes unless explicitly intended."
+    },
+    {
+      "name": "Azure blob misconfiguration",
+      "notes": "public container access",
+      "desc": "Setting Azure Blob storage container access levels to public, allowing anyone to enumerate, download, or overwrite stored enterprise blobs.",
+      "prevention": "Disable anonymous blob access, use scoped identities, and review container-level permissions regularly."
+    },
+    {
+      "name": "IAM misconfiguration",
+      "notes": "over-privileged roles & policies",
+      "desc": "Granting excessive cloud permissions (e.g. sts:AssumeRole, iam:PassRole, admin wildcards) to service accounts or compute instances, facilitating lateral privilege escalation.",
+      "prevention": "Grant identities only required actions and resources, separate roles by workload, and audit effective permissions."
+    },
+    {
+      "name": "Serverless function injection",
+      "notes": "event payload code execution",
+      "desc": "Injecting malicious command strings or template expressions into event parameters processed by AWS Lambda, Google Cloud Functions, or Azure Functions.",
+      "prevention": "Validate serverless event input, avoid unsafe evaluation, and give the function a minimal execution role."
+    },
+    {
+      "name": "Lambda event injection",
+      "notes": "asynchronous event poisoning",
+      "desc": "Poisoning upstream event sources (such as SQS queues, S3 event notifications, or SNS topics) that trigger Lambda executions, executing commands in serverless execution environments.",
+      "prevention": null
+    },
+    {
+      "name": "Container escape",
+      "notes": "privileged container breakout",
+      "desc": "Breaking out of isolated container runtimes into the host operating system by exploiting privileged container flags, mounted docker.sock, or kernel vulnerabilities (e.g. dirty COW, runc CVEs).",
+      "prevention": null
+    },
+    {
+      "name": "Kubernetes RBAC misconfig",
+      "notes": "wildcard cluster-admin roles",
+      "desc": "Assigning overly permissive Role or ClusterRole bindings (e.g. secrets get/list, pods/exec) to default service accounts within Kubernetes clusters.",
+      "prevention": null
+    },
+    {
+      "name": "Terraform state exposure",
+      "notes": "unencrypted tfstate leaks",
+      "desc": "Leaving unencrypted Terraform state files (.tfstate) in public buckets or version control, exposing plaintext database passwords, cloud secrets, and private keys.",
+      "prevention": null
+    },
+    {
+      "name": "CI/CD pipeline injection",
+      "notes": "workflow command poisoning",
+      "desc": "Injecting malicious commands into GitHub Actions workflows or GitLab CI jobs via untrusted pull request titles, issue comments, or poisoned branch names.",
+      "prevention": null
+    },
+    {
+      "name": "Dependency confusion",
+      "notes": "internal package name squatting",
+      "desc": "Publishing public packages to open registries (npm, PyPI) matching private internal package names, tricking enterprise build pipelines into downloading malicious public packages.",
+      "prevention": null
+    },
+    {
+      "name": "Typosquatted packages",
+      "notes": "lookalike package names",
+      "desc": "Registering package names that visually or phonetically mimic popular open-source libraries (e.g. cross-env vs crossenv) to deliver backdoored packages to inattentive developers.",
+      "prevention": null
+    },
+    {
+      "name": "Malicious npm/pip package",
+      "notes": "trojanized open-source dependencies",
+      "desc": "Compromising legitimate maintainer accounts or transferring package ownership to inject backdoors, crypto miners, or credential exfiltration code into popular library updates.",
+      "prevention": null
+    },
+    {
+      "name": "Build script RCE",
+      "notes": "postinstall / setup.py execution",
+      "desc": "Exploiting automated package installation lifecycle hooks (e.g. npm postinstall scripts, pip setup.py) to execute arbitrary malicious code upon package download.",
+      "prevention": null
+    }
+  ],
+  "order": 12
+}

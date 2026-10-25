@@ -1,0 +1,93 @@
+{
+  "id": "dos",
+  "title": "Denial of Service",
+  "description": "Techniques aimed at degrading availability, exhausting hardware resources, stalling worker threads, and consuming connection limits.",
+  "icon": "flame",
+  "attacks": [
+    {
+      "name": "HTTP flood",
+      "notes": "high-rate request volumetric flood",
+      "desc": "Flooding web servers with a massive volume of legitimate-looking HTTP GET or POST requests to exhaust bandwidth, CPU, and web server worker threads.",
+      "prevention": "Use edge rate limits, autoscaling, caching, and upstream DDoS protection for traffic floods."
+    },
+    {
+      "name": "Slowloris",
+      "notes": "slow incomplete HTTP headers",
+      "desc": "Opening hundreds of HTTP connections and transmitting partial headers at slow intervals (every few seconds), exhausting web server concurrent connection pools.",
+      "prevention": "Set connection and header-read timeouts, per-client limits, and a cap on incomplete requests."
+    },
+    {
+      "name": "RUDY",
+      "notes": "R-U-Dead-Yet? slow POST",
+      "desc": "Sending HTTP POST requests with a large Content-Length header and transmitting body data at an extremely slow rate (e.g. 1 byte every 10 seconds) to tie up server threads.",
+      "prevention": "Limit slow request bodies with read timeouts and minimum throughput requirements."
+    },
+    {
+      "name": "Hash collision DoS",
+      "notes": "hash table degradation O(n^2)",
+      "desc": "Submitting POST requests containing thousands of parameter keys engineered to produce identical hash table keys, degrading dictionary lookups from O(1) to O(n^2) CPU overhead.",
+      "prevention": "Use maintained runtime hashing and impose limits on attacker-controlled collection sizes."
+    },
+    {
+      "name": "Regex DoS",
+      "notes": "catastrophic backtracking strings",
+      "desc": "Transmitting crafted payloads into regular expressions that trigger catastrophic backtracking, locking CPU threads at 100% utilization for hours.",
+      "prevention": "Use bounded, safe regular expressions and reject inputs that exceed expected size or complexity."
+    },
+    {
+      "name": "XML bomb",
+      "notes": "billion laughs entity recursion",
+      "desc": "Submitting small XML payloads containing recursively expanding entity definitions that expand into gigabytes in memory, crashing the XML parser process.",
+      "prevention": null
+    },
+    {
+      "name": "Large file upload",
+      "notes": "disk and bandwidth exhaustion",
+      "desc": "Submitting oversized file uploads to endpoints lacking request body size limits, filling temporary disk partitions and exhausting network interface bandwidth.",
+      "prevention": null
+    },
+    {
+      "name": "Zip bomb",
+      "notes": "decompression archive trap",
+      "desc": "Uploading small, highly compressed archives (e.g. a few kilobytes) that expand into gigabytes or terabytes during extraction, exhausting available disk space.",
+      "prevention": null
+    },
+    {
+      "name": "Decompression bomb",
+      "notes": "gzip / tar bomb",
+      "desc": "Sending HTTP requests or files encoded with nested compression streams (gzip/bzip2) that overwhelm decompression routines with astronomical memory demands.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL complexity attack",
+      "notes": "expensive field calculation",
+      "desc": "Crafting GraphQL queries requesting deeply nested relationships or computationally expensive fields across hundreds of aliases to overwhelm backend database pools.",
+      "prevention": null
+    },
+    {
+      "name": "Algorithmic complexity",
+      "notes": "worst-case input targeting",
+      "desc": "Supplying worst-case input configurations to internal algorithms (such as QuickSort with adversarial pivot inputs) to degrade execution from O(n log n) to O(n^2).",
+      "prevention": null
+    },
+    {
+      "name": "Memory exhaustion",
+      "notes": "heap leak & allocation abuse",
+      "desc": "Triggering application endpoints that allocate unbounded buffers in memory without releasing references, driving the runtime into OutOfMemoryError crashes.",
+      "prevention": null
+    },
+    {
+      "name": "Connection pool exhaustion",
+      "notes": "database connection starvation",
+      "desc": "Opening slow or unclosed transactions that hold open database connection pool slots, preventing legitimate application threads from communicating with datastores.",
+      "prevention": null
+    },
+    {
+      "name": "Session table exhaustion",
+      "notes": "unbounded session creation",
+      "desc": "Automating millions of unauthenticated initial requests to flood in-memory session stores (Redis, Memcached), triggering evictions and crashing session managers.",
+      "prevention": null
+    }
+  ],
+  "order": 11
+}

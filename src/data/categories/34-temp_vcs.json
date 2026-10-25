@@ -1,0 +1,87 @@
+{
+  "id": "temp_vcs",
+  "title": "Temp Files & VCS Artifacts",
+  "description": "Development leftovers and temporary files exposed on production systems.",
+  "icon_key": "recon",
+  "attacks": [
+    {
+      "name": ".swp / .swo",
+      "notes": "Vim swap files",
+      "desc": "Exposed Vim swap files can contain source code or unsaved edits from a developer session.",
+      "prevention": "Exclude editor swap files from deployments and deny access to hidden temporary-file extensions."
+    },
+    {
+      "name": "~ backup files",
+      "notes": "index.php~",
+      "desc": "Editor backup files with a trailing tilde may reveal earlier source or configuration content.",
+      "prevention": "Write backups to private storage outside the document root and block direct HTTP access."
+    },
+    {
+      "name": ".DS_Store",
+      "notes": "macOS dir listing",
+      "desc": "A .DS_Store file can disclose filenames from a directory even when listing is disabled.",
+      "prevention": "Exclude .DS_Store files from builds and restrict directory metadata at the web server."
+    },
+    {
+      "name": "Thumbs.db",
+      "notes": "Windows dir listing",
+      "desc": "Windows thumbnail caches can reveal names or previews of files once present in a folder.",
+      "prevention": "Keep Windows thumbnail caches out of published assets and remove them during packaging."
+    },
+    {
+      "name": "~$file.docx",
+      "notes": "Office lock files",
+      "desc": "Office lock files may reveal document names or user details when copied to a web root.",
+      "prevention": "Exclude Office lock files from deployment and store documents in access-controlled locations."
+    },
+    {
+      "name": ".svn/entries",
+      "notes": "Subversion",
+      "desc": "Exposed Subversion metadata can disclose repository structure or source references.",
+      "prevention": null
+    },
+    {
+      "name": ".hg/",
+      "notes": "Mercurial",
+      "desc": "An exposed Mercurial directory can reveal repository history and application source.",
+      "prevention": null
+    },
+    {
+      "name": ".bzr/",
+      "notes": "Bazaar",
+      "desc": "An exposed Bazaar directory can reveal version-control metadata and source files.",
+      "prevention": null
+    },
+    {
+      "name": "composer.lock / package-lock.json",
+      "notes": "Dep version leak",
+      "desc": "Lockfiles can reveal exact dependency versions, which aids inventory and patch review.",
+      "prevention": null
+    },
+    {
+      "name": ".idea/ .vscode/",
+      "notes": "Editor configs",
+      "desc": "Public editor configuration folders can reveal project paths, tasks, or environment assumptions.",
+      "prevention": null
+    },
+    {
+      "name": "phpinfo.php",
+      "notes": "Full config",
+      "desc": "An exposed phpinfo page can reveal loaded modules, paths, and environment configuration.",
+      "prevention": null
+    },
+    {
+      "name": "/server-status, /server-info",
+      "notes": "Apache",
+      "desc": "Apache status or information endpoints can disclose active requests and server configuration.",
+      "prevention": null
+    },
+    {
+      "name": "/.well-known/ enum",
+      "notes": "Various",
+      "desc": "Well-known endpoints should be inventoried because some expose service metadata or configuration.",
+      "prevention": null
+    }
+  ],
+  "order": 34
+}

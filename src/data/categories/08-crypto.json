@@ -1,0 +1,111 @@
+{
+  "id": "crypto",
+  "title": "Cryptography",
+  "description": "Flaws in cryptographic algorithm selection, key generation, entropy sources, padding schemes, and protocol handshakes.",
+  "icon": "lock",
+  "attacks": [
+    {
+      "name": "Weak TLS config",
+      "notes": "outdated cipher suites",
+      "desc": "Deploying web servers supporting outdated TLS versions (TLS 1.0/1.1) or weak cipher suites with small key sizes susceptible to decryption and man-in-the-middle attacks.",
+      "prevention": "Use current TLS versions and cipher suites from maintained server profiles, and rescan after configuration changes."
+    },
+    {
+      "name": "SSL stripping / HSTS bypass",
+      "notes": "HTTP downgrade attacks",
+      "desc": "Intercepting initial unencrypted HTTP requests and stripping HTTPS redirects to force communications over plaintext HTTP when HSTS preloading is not configured.",
+      "prevention": "Redirect to HTTPS, deploy HSTS only after the site is ready, and avoid sending sensitive content over HTTP."
+    },
+    {
+      "name": "Weak password hashing",
+      "notes": "MD5, SHA1",
+      "desc": "Storing user passwords using obsolete cryptographic digests (MD5, SHA-1, single-round SHA-256) susceptible to high-speed GPU cracking and rainbow table lookups.",
+      "prevention": "Hash passwords with a modern password KDF such as Argon2id, with an appropriate work factor and unique salts."
+    },
+    {
+      "name": "Unsalted password hashes",
+      "notes": "identical hash collisions",
+      "desc": "Failing to apply unique cryptographic salts per user before hashing passwords, allowing attackers to identify identical passwords across users and utilize precomputed tables.",
+      "prevention": "Use a unique cryptographically random salt for every password before hashing with a suitable password KDF."
+    },
+    {
+      "name": "ECB mode detection",
+      "notes": "block pattern analysis",
+      "desc": "Using Electronic Codebook (ECB) cipher mode where identical plaintext blocks produce identical ciphertext blocks, preserving visual and structural patterns in encrypted data.",
+      "prevention": "Use authenticated encryption modes such as AES-GCM rather than ECB, and protect keys and nonces."
+    },
+    {
+      "name": "Padding oracle",
+      "notes": "CBC padding side channel",
+      "desc": "Exploiting differences in server error responses regarding PKCS#7 cryptographic padding validity to decrypt ciphertexts or forge ciphertexts byte-by-byte without the key.",
+      "prevention": "Use an authenticated cipher and avoid leaking padding or decryption details through errors or timing."
+    },
+    {
+      "name": "CBC bit-flipping",
+      "notes": "IV / ciphertext tampering",
+      "desc": "Flipping bits in the initialization vector (IV) or previous ciphertext block in CBC mode to produce predictable 1-to-1 modifications in the decrypted plaintext.",
+      "prevention": null
+    },
+    {
+      "name": "IV reuse",
+      "notes": "nonce collision in CTR/GCM",
+      "desc": "Reusing Initialization Vectors with the same key in stream ciphers or modes like CTR and GCM, destroying confidentiality and allowing algebraic plaintext recovery.",
+      "prevention": null
+    },
+    {
+      "name": "Weak PRNG for tokens",
+      "notes": "Math.random(), timestamp",
+      "desc": "Generating session IDs, reset tokens, or cryptographic keys using non-cryptographic pseudo-random number generators (e.g. Math.random(), rand()) with low entropy.",
+      "prevention": null
+    },
+    {
+      "name": "Predictable token seeding",
+      "notes": "timestamp seed initialization",
+      "desc": "Seeding random number generators with predictable system timestamps or PID values, allowing attackers to replay the generator sequence and predict future tokens.",
+      "prevention": null
+    },
+    {
+      "name": "Hardcoded keys / secrets",
+      "notes": "static keys in source",
+      "desc": "Embedding static encryption keys, HMAC secrets, or private keys directly in source code, client binaries, or configuration repositories.",
+      "prevention": null
+    },
+    {
+      "name": "Key leakage in JS bundle",
+      "notes": "client-side exposed keys",
+      "desc": "Accidentally bundling private backend API keys, cloud master keys, or signing secrets into publicly accessible front-end JavaScript bundles.",
+      "prevention": null
+    },
+    {
+      "name": "Certificate validation bypass",
+      "notes": "disabled SSL verification",
+      "desc": "Disabling TLS certificate trust verification (e.g. verify=False, rejectUnauthorized: false) in backend HTTP clients, enabling trivial man-in-the-middle attacks.",
+      "prevention": null
+    },
+    {
+      "name": "Encrypted cookie tampering",
+      "notes": "missing MAC integrity",
+      "desc": "Tampering with encrypted cookies when encryption is performed without cryptographic authentication (MAC/AEAD), allowing malleability attacks.",
+      "prevention": null
+    },
+    {
+      "name": "Crypto downgrade",
+      "notes": "negotiation manipulation",
+      "desc": "Tampering with cryptographic protocol negotiations to coerce communicating systems into falling back to legacy, breakable encryption algorithms.",
+      "prevention": null
+    },
+    {
+      "name": "Nonce reuse",
+      "notes": "cryptographic nonce replay",
+      "desc": "Reusing a cryptographic 'number used once' in authentication protocols or authenticated encryption, leading to message replay or secret key recovery.",
+      "prevention": null
+    },
+    {
+      "name": "Length extension attack",
+      "notes": "Merkle-Damgard hashing flaws",
+      "desc": "Exploiting hash algorithms like MD5 and SHA-1/SHA-256 where an attacker knowing Hash(secret || message) and message length can calculate Hash(secret || message || padding || extension) without knowing the secret.",
+      "prevention": null
+    }
+  ],
+  "order": 8
+}

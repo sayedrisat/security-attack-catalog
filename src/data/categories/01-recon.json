@@ -1,0 +1,165 @@
+{
+  "id": "recon",
+  "title": "Reconnaissance & Information Gathering",
+  "description": "Techniques for mapping external attack surfaces, enumerating network and application assets, and harvesting sensitive intelligence prior to exploitation.",
+  "icon": "radar",
+  "attacks": [
+    {
+      "name": "Subdomain enumeration",
+      "notes": "subfinder, amass",
+      "desc": "Discovering unlinked, development, staging, or legacy subdomains belonging to a target domain using passive sources (Certificate Transparency, DNS aggregators) and active brute-forcing to uncover neglected assets.",
+      "prevention": "Keep a complete subdomain inventory, retire unused hosts, and apply the same security controls to every environment; public DNS names cannot be hidden reliably."
+    },
+    {
+      "name": "DNS zone transfer (AXFR)",
+      "notes": "misconfigured NS",
+      "desc": "Querying misconfigured authoritative DNS nameservers using AXFR requests to replicate the entire zone file, leaking comprehensive internal hostnames, IP allocations, and infrastructure topography.",
+      "prevention": "Allow AXFR only to explicitly authorized secondary name servers, preferably over authenticated channels, and audit zone-transfer settings."
+    },
+    {
+      "name": "Virtual host discovery",
+      "notes": "Host header fuzzing",
+      "desc": "Fuzzing the HTTP 'Host' header on a single web server IP to discover distinct multi-tenant or private web applications hosted behind the same web server that lack public DNS records.",
+      "prevention": "Reject unknown Host values at the edge and backend, and require explicit host allowlists for each virtual application."
+    },
+    {
+      "name": "Port & service scanning",
+      "notes": "nmap",
+      "desc": "Probing target host network interfaces across TCP and UDP ports using syn, connect, or fragmented scans to identify reachable listening services and potential entry points.",
+      "prevention": "Expose only required ports through firewalls or private networks, and keep reachable services patched and inventoried."
+    },
+    {
+      "name": "Service version fingerprinting",
+      "notes": "banner grabbing",
+      "desc": "Capturing service connection banners and inspecting protocol-specific response characteristics to determine exact daemon software names, patch levels, and associated public CVE vulnerabilities.",
+      "prevention": "Limit unnecessary version banners, but prioritize timely patching because software can still be fingerprinted indirectly."
+    },
+    {
+      "name": "Technology stack fingerprinting",
+      "notes": "whatweb, Wappalyzer",
+      "desc": "Analyzing response headers, cookies, HTML source artifacts, scripts, and file structures to identify underlying frameworks, runtimes, database drivers, and programming languages.",
+      "prevention": "Avoid exposing debug fingerprints and exact versions where possible; maintain and patch the actual stack instead of relying on obscurity."
+    },
+    {
+      "name": "CMS detection & version",
+      "notes": "WP, Drupal, Joomla",
+      "desc": "Identifying Content Management Systems and active plugins or themes through known paths (e.g. /wp-content/), meta generator tags, readme files, and static resource hashes.",
+      "prevention": "Keep CMS core, themes, and plugins updated; remove unused components and restrict administrative access."
+    },
+    {
+      "name": "Directory & file brute forcing",
+      "notes": "ffuf, gobuster",
+      "desc": "Executing high-velocity dictionary-based HTTP requests against a web root to discover unlinked directories, administrative panels, test interfaces, and unreferenced endpoints.",
+      "prevention": "Treat every sensitive route as discoverable: enforce authentication and authorization on the server, regardless of its path."
+    },
+    {
+      "name": "Backup file discovery",
+      "notes": ".bak .old .zip ~",
+      "desc": "Searching for temporary, backup, or compressed files left behind by text editors and backup scripts (e.g. config.php.bak, db.sql, backup.zip) that expose sensitive raw source code or database dumps.",
+      "prevention": "Store backups outside the public web root, deny direct access to backup extensions, and scan deployments for stray archives."
+    },
+    {
+      "name": "Exposed .git / .svn / .hg",
+      "notes": "full source recovery",
+      "desc": "Downloading publicly accessible version control repository directories (such as /.git/) to reconstruct the entire application source tree, commit logs, internal author notes, and hardcoded secrets.",
+      "prevention": null
+    },
+    {
+      "name": "Exposed .env, config, credentials",
+      "notes": "config files, API keys",
+      "desc": "Accessing world-readable environment configuration files (e.g. /.env, /config.json, /web.config) containing production database credentials, encryption salts, third-party API tokens, and secret keys.",
+      "prevention": null
+    },
+    {
+      "name": "robots.txt / sitemap mining",
+      "notes": "hidden path leaks",
+      "desc": "Inspecting crawler directive files like /robots.txt and /sitemap.xml to pinpoint high-value restricted directories, legacy modules, and internal portals explicitly disallowed from search indexing.",
+      "prevention": null
+    },
+    {
+      "name": "security.txt discovery",
+      "notes": "policy disclosure",
+      "desc": "Querying the RFC 9116 /.well-known/security.txt file to gather vulnerability disclosure policies, security contact channels, cryptographic signing keys, and organization scoping details.",
+      "prevention": null
+    },
+    {
+      "name": "Google / GitHub dorking",
+      "notes": "advanced search operators",
+      "desc": "Utilizing specialized search query syntax across public search engines and code repositories to discover indexed credentials, private staging subdomains, proprietary source code leaks, and open sensitive documents.",
+      "prevention": null
+    },
+    {
+      "name": "Certificate transparency mining",
+      "notes": "crt.sh subdomain leak",
+      "desc": "Querying publicly verifiable append-only Certificate Transparency (CT) logs to identify newly minted or ephemeral SSL/TLS certificates issued for internal hostnames and subdomains.",
+      "prevention": null
+    },
+    {
+      "name": "Wayback Machine URL mining",
+      "notes": "old endpoints",
+      "desc": "Scraping historical web snapshots from archival services to unearth deprecated REST API endpoints, forgotten parameters, outdated documentation, and previously exposed sensitive files.",
+      "prevention": null
+    },
+    {
+      "name": "JavaScript file mining",
+      "notes": "endpoints, keys, comments",
+      "desc": "Extracting, formatting, and analyzing client-side JavaScript bundles to identify hidden API routes, third-party credentials, internal hostnames, and developer comments disclosing system architecture.",
+      "prevention": null
+    },
+    {
+      "name": "Source map (.map) recovery",
+      "notes": "original source",
+      "desc": "Retrieving production .js.map and .ts.map files inadvertently deployed to production, allowing complete de-minification and recovery of pristine front-end TypeScript/JavaScript source code.",
+      "prevention": null
+    },
+    {
+      "name": "Parameter discovery",
+      "notes": "arjun, paramspider",
+      "desc": "Fuzzing HTTP query parameters, POST body parameters, and JSON payloads with specialized dictionaries to identify hidden or undocumented inputs that trigger debug or privileged functionality.",
+      "prevention": null
+    },
+    {
+      "name": "Metadata extraction",
+      "notes": "EXIF, PDF, DOCX authors",
+      "desc": "Extracting hidden metadata from public documents, images, and media files to harvest employee usernames, internal software versions, corporate printer paths, and operating system builds.",
+      "prevention": null
+    },
+    {
+      "name": "Email / employee enumeration",
+      "notes": "hunter.io, LinkedIn",
+      "desc": "Gathering company email formatting standards, staff rosters, department directories, and engineering roles via OSINT platforms to prepare targeted spear-phishing and credential stuffing lists.",
+      "prevention": null
+    },
+    {
+      "name": "Cloud bucket enumeration",
+      "notes": "S3/GCS/Azure brute",
+      "desc": "Brute-forcing permutations of company names against cloud storage provider namespaces (Amazon S3, Google Cloud Storage, Azure Blob Storage) to locate misconfigured public data stores.",
+      "prevention": null
+    },
+    {
+      "name": "Secret scanning in repos",
+      "notes": "trufflehog, gitleaks",
+      "desc": "Automating regex and entropy scanning over public or organization git commits to detect accidentally committed OAuth tokens, SSH private keys, AWS access keys, and cloud database strings.",
+      "prevention": null
+    },
+    {
+      "name": "ASN / IP range enumeration",
+      "notes": "whois, BGP tables",
+      "desc": "Mapping autonomous system numbers (ASNs) and IP CIDR blocks registered to an enterprise via BGP routing tables and WHOIS data to define the full perimeter of hosting infrastructure.",
+      "prevention": null
+    },
+    {
+      "name": "Subdomain takeover",
+      "notes": "dangling CNAME",
+      "desc": "Claiming unallocated third-party cloud services (GitHub Pages, Heroku, AWS S3) pointed to by active DNS CNAME records, gaining full control over content served on the victim's domain.",
+      "prevention": null
+    },
+    {
+      "name": "Dangling DNS records",
+      "notes": "stale DNS pointers",
+      "desc": "Identifying obsolete A, AAAA, MX, or NS records pointing to decommissioned IP addresses or expired third-party domains, opening opportunities for traffic interception and impersonation.",
+      "prevention": null
+    }
+  ],
+  "order": 1
+}

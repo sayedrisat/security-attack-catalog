@@ -1,0 +1,105 @@
+{
+  "id": "session",
+  "title": "Session Management",
+  "description": "Flaws in token entropy, lifecycle management, cookie security scopes, session invalidation, and cross-site request forgery protections.",
+  "icon": "clock",
+  "attacks": [
+    {
+      "name": "Session token entropy analysis",
+      "notes": "burp sequencer style",
+      "desc": "Collecting thousands of sequentially issued session identifiers to statistically calculate bitwise randomness and detect predictable PRNG patterns susceptible to token prediction.",
+      "prevention": "Generate session identifiers with a cryptographically secure random generator and test their entropy and length."
+    },
+    {
+      "name": "Session prediction",
+      "notes": "algorithmic generation",
+      "desc": "Calculating valid session tokens by identifying predictable inputs such as user ID, creation timestamp, IP address, or weak hashing algorithms used to construct session keys.",
+      "prevention": "Use unpredictable opaque session tokens and avoid timestamps, counters, or user IDs as token material."
+    },
+    {
+      "name": "Session fixation",
+      "notes": "persisted pre-login token",
+      "desc": "Establishing a known session token in a victim's browser prior to authentication that remains bound to the account after the user logs in, granting the attacker persistent access.",
+      "prevention": "Create a fresh session ID after login and privilege changes, and invalidate the pre-authentication ID."
+    },
+    {
+      "name": "Session hijacking",
+      "notes": "cookie theft",
+      "desc": "Acquiring an active user's session identifier through network sniffing, XSS exploitation, logging leaks, or physical access to impersonate the victim without credentials.",
+      "prevention": "Use HTTPS, Secure and HttpOnly cookies, narrow cookie scope, and rotate or revoke tokens when compromise is suspected."
+    },
+    {
+      "name": "Session timeout absence",
+      "notes": "perpetual session validity",
+      "desc": "Maintaining sessions indefinitely without enforcing idle or absolute timeout thresholds, increasing the exposure window for stolen or abandoned session tokens.",
+      "prevention": "Enforce idle and absolute session expiry on the server rather than depending on browser closure."
+    },
+    {
+      "name": "Session not invalidated on logout",
+      "notes": "client-side deletion only",
+      "desc": "Removing session cookies from the client browser on logout without destroying the associated session record in the backend server database, allowing replayed tokens to remain functional.",
+      "prevention": "Revoke the server-side session and clear its cookie on logout; reject the old token on every endpoint."
+    },
+    {
+      "name": "Session not invalidated on password change",
+      "notes": "concurrent persistence",
+      "desc": "Failing to terminate all existing active sessions when a user updates their password, allowing unauthorized actors with compromised sessions to maintain access.",
+      "prevention": null
+    },
+    {
+      "name": "Concurrent session flaws",
+      "notes": "unrestricted multi-login",
+      "desc": "Allowing an account to maintain limitless simultaneous active sessions from distinct geographic regions and IP subnets without anomaly detection or single-session enforcement.",
+      "prevention": null
+    },
+    {
+      "name": "Cookie scope / path issues",
+      "notes": "overly broad Domain/Path",
+      "desc": "Setting overly broad cookie Domain attributes (e.g. Domain=.example.com) or omitting strict Path limits, causing session tokens to be leaked to vulnerable or untrusted subdomains.",
+      "prevention": null
+    },
+    {
+      "name": "CSRF",
+      "notes": "unauthorized command execution",
+      "desc": "Tricking an authenticated victim into submitting an unwanted HTTP request to a target application that blindly trusts the victim's session cookies.",
+      "prevention": null
+    },
+    {
+      "name": "CSRF token missing / predictable",
+      "notes": "absent or static anti-CSRF token",
+      "desc": "Omitting cryptographic anti-CSRF tokens in state-changing POST/PUT requests, or utilizing predictable tokens derived from usernames or timestamps.",
+      "prevention": null
+    },
+    {
+      "name": "CSRF token not validated",
+      "notes": "omitted token check",
+      "desc": "Generating anti-CSRF tokens on the server but failing to verify them upon receiving requests, or bypassing verification when the token parameter is completely removed.",
+      "prevention": null
+    },
+    {
+      "name": "SameSite bypass",
+      "notes": "cookie context relaxation",
+      "desc": "Circumventing SameSite cookie protections through top-level navigations, client redirects, subdomain takeover, or exploiting the 2-minute Lax-under-POST window in modern browsers.",
+      "prevention": null
+    },
+    {
+      "name": "Cross-site WebSocket hijacking",
+      "notes": "unauthenticated WS handshake",
+      "desc": "Initiating cross-origin WebSocket handshakes from an attacker's website using the victim's ambient browser cookies to establish two-way communication channels with sensitive backend endpoints.",
+      "prevention": null
+    },
+    {
+      "name": "Session puzzling",
+      "notes": "session variable overriding",
+      "desc": "Manipulating multi-step workflows to overwrite critical session variables (such as user role or authentication status) by accessing disparate application endpoints in unexpected order.",
+      "prevention": null
+    },
+    {
+      "name": "Session replay",
+      "notes": "re-executing past requests",
+      "desc": "Capturing legitimate authenticated HTTP transactions and replaying them against the server to duplicate actions (such as financial transactions) when nonce or timestamp verification is absent.",
+      "prevention": null
+    }
+  ],
+  "order": 4
+}

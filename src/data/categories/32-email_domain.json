@@ -1,0 +1,69 @@
+{
+  "id": "email_domain",
+  "title": "Email & Domain",
+  "description": "Domain identity, email delivery, and address-normalization risks.",
+  "icon_key": "infra",
+  "attacks": [
+    {
+      "name": "Email spoofing",
+      "notes": "SPF/DKIM/DMARC gap",
+      "desc": "Weak SPF, DKIM, or DMARC policy can make forged mail appear to come from a trusted domain.",
+      "prevention": "Publish and enforce SPF, DKIM, and DMARC policies, and monitor authentication failures."
+    },
+    {
+      "name": "Display-name spoofing",
+      "notes": "\"PayPal\" <evil@x.com>",
+      "desc": "A trusted-looking display name can hide an unrelated sender address from a casual reader.",
+      "prevention": "Show and verify the actual sender domain, not only the display name, in mail review workflows."
+    },
+    {
+      "name": "SMTP header injection",
+      "notes": "%0aTo: in email param",
+      "desc": "Unescaped newline characters in an email field can inject additional mail headers.",
+      "prevention": "Validate email field values and use a mail library that encodes headers instead of concatenating raw input."
+    },
+    {
+      "name": "Open relay",
+      "notes": "swaks test",
+      "desc": "An SMTP server that relays mail for arbitrary senders can be abused to distribute messages.",
+      "prevention": "Require authenticated relay clients and restrict permitted sender and recipient domains."
+    },
+    {
+      "name": "Mailbomb",
+      "notes": "Bulk subscribe loops",
+      "desc": "Repeated subscription or notification requests can overwhelm a mailbox if abuse controls are weak.",
+      "prevention": null
+    },
+    {
+      "name": "IDN homograph",
+      "notes": "аpple.com",
+      "desc": "Internationalized domain characters can create visually deceptive lookalike names.",
+      "prevention": null
+    },
+    {
+      "name": "Typosquat",
+      "notes": "Register lookalike",
+      "desc": "Registering a misspelled domain can misdirect users who mistype a trusted address.",
+      "prevention": null
+    },
+    {
+      "name": "Plus-address abuse",
+      "notes": "you+1@, you+2@ → multi-account",
+      "desc": "Plus-address variants may bypass per-email account limits if addresses are not normalized for that rule.",
+      "prevention": null
+    },
+    {
+      "name": "Case-sensitive email bypass",
+      "notes": "You@ vs you@",
+      "desc": "Case differences in an email address may create duplicate accounts when the application treats equivalent addresses differently.",
+      "prevention": null
+    },
+    {
+      "name": "Email normalization bypass",
+      "notes": "Dots, unicode",
+      "desc": "Dot rules and Unicode handling can cause account identity checks to disagree about whether two addresses match.",
+      "prevention": null
+    }
+  ],
+  "order": 32
+}

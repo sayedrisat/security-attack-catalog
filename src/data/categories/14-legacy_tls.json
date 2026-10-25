@@ -1,0 +1,81 @@
+{
+  "id": "legacy_tls",
+  "title": "Legacy TLS & Crypto Protocol",
+  "description": "Older TLS protocol and certificate weaknesses that affect transport trust.",
+  "icon_key": "crypto",
+  "attacks": [
+    {
+      "name": "POODLE",
+      "notes": "SSLv3 fallback",
+      "desc": "POODLE exploits SSLv3 CBC padding behavior when a connection falls back to the obsolete protocol.",
+      "prevention": "Disable SSLv3 and fallback to it; support current TLS versions with maintained cipher configurations."
+    },
+    {
+      "name": "BEAST",
+      "notes": "CBC IV chaining",
+      "desc": "BEAST targets predictable CBC chaining in TLS 1.0 under conditions that allow chosen plaintext.",
+      "prevention": "Disable TLS 1.0 and legacy CBC suites where compatibility allows, and use modern AEAD cipher suites."
+    },
+    {
+      "name": "Heartbleed",
+      "notes": "nmap --script ssl-heartbleed",
+      "desc": "Heartbleed is an OpenSSL heartbeat bug that can disclose process memory from an affected server.",
+      "prevention": "Patch affected OpenSSL builds, rotate exposed private keys where necessary, and disable vulnerable heartbeat support."
+    },
+    {
+      "name": "DROWN",
+      "notes": "SSLv2 support",
+      "desc": "DROWN uses an SSLv2-capable service sharing an RSA key to weaken otherwise stronger TLS connections.",
+      "prevention": "Disable SSLv2 on all services sharing a certificate key and replace weak or reused RSA keys."
+    },
+    {
+      "name": "ROBOT",
+      "notes": "Bleichenbacher oracle",
+      "desc": "ROBOT relies on a Bleichenbacher-style RSA padding oracle in vulnerable TLS implementations.",
+      "prevention": null
+    },
+    {
+      "name": "Lucky13",
+      "notes": "CBC timing",
+      "desc": "Lucky13 uses CBC record-processing timing differences to infer protected plaintext in affected implementations.",
+      "prevention": null
+    },
+    {
+      "name": "Sweet32",
+      "notes": "64-bit block cipher",
+      "desc": "Sweet32 exploits birthday collisions in 64-bit block ciphers during long encrypted sessions.",
+      "prevention": null
+    },
+    {
+      "name": "FREAK / Logjam",
+      "notes": "Export-grade DH",
+      "desc": "FREAK and Logjam exploit support for weak export-grade key exchange or related downgrade paths.",
+      "prevention": null
+    },
+    {
+      "name": "CRIME",
+      "notes": "TLS compression",
+      "desc": "CRIME can reveal secrets when TLS compression makes ciphertext length depend on attacker-controlled input.",
+      "prevention": null
+    },
+    {
+      "name": "RC4 bias",
+      "notes": "RC4 in cipher list",
+      "desc": "Statistical biases in RC4 output can weaken confidentiality when a service still offers RC4 ciphers.",
+      "prevention": null
+    },
+    {
+      "name": "Cert misissuance",
+      "notes": "CT log check",
+      "desc": "Certificate transparency records can reveal certificates issued unexpectedly for a domain.",
+      "prevention": null
+    },
+    {
+      "name": "OCSP stapling absence",
+      "notes": "",
+      "desc": "Missing OCSP stapling shifts revocation checking to the client and may affect privacy or availability; it is not a standalone compromise.",
+      "prevention": null
+    }
+  ],
+  "order": 14
+}

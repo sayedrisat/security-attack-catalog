@@ -1,0 +1,75 @@
+{
+  "id": "proxy_headers",
+  "title": "Header Trust & Proxy Attacks",
+  "description": "Trust-boundary errors in reverse proxy headers and origin routing.",
+  "icon_key": "config",
+  "attacks": [
+    {
+      "name": "X-Forwarded-For trust",
+      "notes": "Spoof IP → bypass rate limit/IP allowlist",
+      "desc": "Trusting a client-supplied forwarding address can bypass IP-based rate limits or allowlists.",
+      "prevention": "Accept client IP headers only from known reverse proxies, and derive security decisions from a trusted proxy chain."
+    },
+    {
+      "name": "X-Forwarded-Host trust",
+      "notes": "Password reset poisoning",
+      "desc": "A trusted forwarded-host value can poison generated links, including password-reset URLs.",
+      "prevention": "Generate password-reset URLs from a configured canonical origin, not from untrusted forwarded-host values."
+    },
+    {
+      "name": "X-Original-URL / X-Rewrite-URL",
+      "notes": "Path-based auth bypass",
+      "desc": "Rewrite headers can make a proxy authorize one path while the backend serves another.",
+      "prevention": "Strip untrusted rewrite headers at the edge and authorize the final backend route."
+    },
+    {
+      "name": "X-Forwarded-Proto",
+      "notes": "Force https/http",
+      "desc": "A spoofed forwarded-protocol value can change URL generation, redirects, or secure-cookie decisions.",
+      "prevention": "Trust X-Forwarded-Proto only from configured proxies and enforce HTTPS decisions from verified connection data."
+    },
+    {
+      "name": "Host header variations",
+      "notes": "Host: evil.com, Host: target.com:evil.com",
+      "desc": "Ambiguous Host values can make routing, security checks, and generated links disagree on the intended authority.",
+      "prevention": null
+    },
+    {
+      "name": "Absolute-URI request line",
+      "notes": "GET https://target.com/admin",
+      "desc": "An absolute URI in the request line may be routed or validated differently from an origin-form path.",
+      "prevention": null
+    },
+    {
+      "name": "Hop-by-hop header abuse",
+      "notes": "Connection: X-Foo",
+      "desc": "A Connection header can nominate other headers as hop-by-hop, causing a proxy to strip data the backend expects.",
+      "prevention": null
+    },
+    {
+      "name": "Duplicate Host headers",
+      "notes": "Two Host lines",
+      "desc": "Two Host headers can be interpreted differently by separate HTTP components, affecting routing or authorization.",
+      "prevention": null
+    },
+    {
+      "name": "Origin IP discovery",
+      "notes": "Shodan, crt.sh, historical DNS",
+      "desc": "Historical DNS and host indexes may reveal a CDN-protected origin address.",
+      "prevention": null
+    },
+    {
+      "name": "Session persistence LB",
+      "notes": "Sticky cookie → pin to old version",
+      "desc": "Sticky routing can keep a session on an older backend with different security controls.",
+      "prevention": null
+    },
+    {
+      "name": "WAF bypass encoding",
+      "notes": "Case, comment, whitespace, unicode",
+      "desc": "Alternate encodings can evade a WAF when the protected application decodes input differently.",
+      "prevention": null
+    }
+  ],
+  "order": 17
+}

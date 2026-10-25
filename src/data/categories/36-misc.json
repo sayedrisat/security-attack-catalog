@@ -1,0 +1,225 @@
+{
+  "id": "misc",
+  "title": "Misc / Often Missed",
+  "description": "Common service exposure and information disclosure checks.",
+  "icon_key": "infra",
+  "attacks": [
+    {
+      "name": "Missing security.txt",
+      "notes": "/.well-known/security.txt",
+      "desc": "A missing security.txt file can make the intended vulnerability disclosure channel harder to discover; it is not itself a security breach.",
+      "prevention": "Publish a security.txt contact channel to help responsible disclosure, while keeping the actual security policy available elsewhere."
+    },
+    {
+      "name": "Directory listing",
+      "notes": "Autoindex on",
+      "desc": "Automatic directory indexes can reveal files that were not linked from the application.",
+      "prevention": "Disable automatic directory listing and ensure private files are outside the public document root."
+    },
+    {
+      "name": "OPTIONS verb disclosure",
+      "notes": "",
+      "desc": "OPTIONS responses can reveal supported methods, which still require proper authorization checks.",
+      "prevention": "Allow only required methods and enforce authorization consistently; hiding OPTIONS alone is not a defense."
+    },
+    {
+      "name": "TRACE / XST",
+      "notes": "TRACE method",
+      "desc": "TRACE reflects request data and is commonly disabled where it serves no operational purpose.",
+      "prevention": "Disable TRACE unless operationally required and verify sensitive headers are not reflected to untrusted clients."
+    },
+    {
+      "name": "WebDAV enabled",
+      "notes": "PROPFIND, PUT",
+      "desc": "Exposed WebDAV methods may permit file listing or writes if authentication and permissions are weak.",
+      "prevention": "Disable WebDAV when unused; otherwise require authentication and restrict write methods and paths."
+    },
+    {
+      "name": ".well-known/openid-configuration",
+      "notes": "IdP discovery leak",
+      "desc": "OIDC discovery metadata identifies provider endpoints and supported features; public exposure is often intentional.",
+      "prevention": "Review OIDC discovery output for sensitive metadata, but keep standards-required public fields available when needed."
+    },
+    {
+      "name": "/health, /metrics exposure",
+      "notes": "Prometheus metrics leak",
+      "desc": "Public health or metrics endpoints can reveal infrastructure details when they include sensitive data.",
+      "prevention": "Require authentication for detailed health and metrics endpoints and remove sensitive labels or secrets."
+    },
+    {
+      "name": "/actuator/* (Spring)",
+      "notes": "env, heapdump, mappings",
+      "desc": "Spring Actuator endpoints can disclose environment, mapping, or diagnostic data if exposed too broadly.",
+      "prevention": "Expose only essential Spring Actuator endpoints and protect them with authentication and network controls."
+    },
+    {
+      "name": "Django /__debug__/",
+      "notes": "Debug toolbar",
+      "desc": "A public Django debug toolbar can reveal request, SQL, and configuration details.",
+      "prevention": "Disable Django debug mode and debug toolbar in production deployments."
+    },
+    {
+      "name": "Laravel Ignition RCE",
+      "notes": "/ with _ignition",
+      "desc": "Affected Laravel Ignition installations can expose dangerous debug functionality when deployed insecurely.",
+      "prevention": "Update affected Laravel components, disable debug mode, and do not expose Ignition tooling publicly."
+    },
+    {
+      "name": "Rails /rails/info",
+      "notes": "",
+      "desc": "Rails information pages may disclose framework or environment details when accessible in production.",
+      "prevention": "Disable public Rails information pages in production and avoid leaking environment details."
+    },
+    {
+      "name": "Next.js _next/data",
+      "notes": "Build ID leak",
+      "desc": "Next.js data endpoints can reveal build identifiers or page data that should still be authorization checked.",
+      "prevention": "Authorize every Next.js data endpoint that returns private information, regardless of its build ID or route."
+    },
+    {
+      "name": "Vite dev server",
+      "notes": "/@vite/client",
+      "desc": "An exposed Vite development server can serve source files and development-only tooling.",
+      "prevention": "Do not expose Vite's development server to the internet; publish only the production build."
+    },
+    {
+      "name": "Webpack source maps",
+      "notes": ".js.map",
+      "desc": "Production source maps can reveal readable source and internal comments from bundled JavaScript.",
+      "prevention": null
+    },
+    {
+      "name": "Swagger/OpenAPI exposure",
+      "notes": "/docs, /openapi.json",
+      "desc": "Public API documentation can disclose available operations; sensitive methods still need authorization.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL playground live",
+      "notes": "/graphiql",
+      "desc": "A public GraphQL playground can aid schema exploration and query testing if production access is unrestricted.",
+      "prevention": null
+    },
+    {
+      "name": "phpMyAdmin / Adminer",
+      "notes": "adminer.php",
+      "desc": "Public database administration tools can expose a high-value login surface or data if poorly protected.",
+      "prevention": null
+    },
+    {
+      "name": "Kibana / Grafana open",
+      "notes": "",
+      "desc": "Public dashboards can reveal telemetry or administrative controls when authentication is missing.",
+      "prevention": null
+    },
+    {
+      "name": "Exposed .env variants",
+      "notes": ".env.local, .env.prod",
+      "desc": "Additional .env filename variants can expose secrets if served as static files.",
+      "prevention": null
+    },
+    {
+      "name": "Docker Compose labels",
+      "notes": "Container metadata",
+      "desc": "Container labels may disclose internal service names or deployment metadata.",
+      "prevention": null
+    },
+    {
+      "name": "robots.txt disallow leaks",
+      "notes": "",
+      "desc": "Disallow rules in robots.txt can reveal paths even though they do not grant access.",
+      "prevention": null
+    },
+    {
+      "name": "Sitemap with params",
+      "notes": "",
+      "desc": "A sitemap may list old endpoints or parameterized URLs that deserve access review.",
+      "prevention": null
+    },
+    {
+      "name": "Wayback old endpoints",
+      "notes": "",
+      "desc": "Archived web pages can reveal endpoints that are still reachable but no longer linked.",
+      "prevention": null
+    },
+    {
+      "name": "Google dork",
+      "notes": "site:target.com inurl:",
+      "desc": "Search engine operators can reveal indexed files or routes that were unintentionally public.",
+      "prevention": null
+    },
+    {
+      "name": "GitHub dork",
+      "notes": "org:target filename:.env",
+      "desc": "Code search can find committed secrets or configuration paths in public repositories.",
+      "prevention": null
+    },
+    {
+      "name": "Shodan/Censys",
+      "notes": "",
+      "desc": "Internet-wide service indexes may list reachable hosts and historical banners.",
+      "prevention": null
+    },
+    {
+      "name": "Favicon hash (Shodan)",
+      "notes": "http.favicon.hash",
+      "desc": "A favicon hash can link a web interface to other hosts indexed with the same icon.",
+      "prevention": null
+    },
+    {
+      "name": "ASN enumeration",
+      "notes": "",
+      "desc": "Autonomous system records help identify address ranges associated with an organization.",
+      "prevention": null
+    },
+    {
+      "name": "Reverse DNS sweep",
+      "notes": "",
+      "desc": "Reverse DNS records can reveal hostnames for known IP ranges.",
+      "prevention": null
+    },
+    {
+      "name": "SNMP public",
+      "notes": "snmpwalk -v2c -c public",
+      "desc": "An SNMP service using a public community string may disclose network inventory and configuration.",
+      "prevention": null
+    },
+    {
+      "name": "NFS exports",
+      "notes": "showmount -e",
+      "desc": "Public NFS exports can expose file shares if host restrictions are weak.",
+      "prevention": null
+    },
+    {
+      "name": "rsync open",
+      "notes": "rsync host::",
+      "desc": "An unauthenticated rsync module can reveal or allow changes to synchronized files.",
+      "prevention": null
+    },
+    {
+      "name": "Redis unauth",
+      "notes": "redis-cli -h host",
+      "desc": "An exposed Redis instance without authentication may permit reads or writes to application state.",
+      "prevention": null
+    },
+    {
+      "name": "Memcached unauth",
+      "notes": "stats",
+      "desc": "An exposed Memcached instance may reveal cached data or permit cache manipulation.",
+      "prevention": null
+    },
+    {
+      "name": "MongoDB unauth",
+      "notes": "mongosh",
+      "desc": "An exposed MongoDB service without authentication may allow database access.",
+      "prevention": null
+    },
+    {
+      "name": "Elasticsearch open",
+      "notes": "/_cat/indices",
+      "desc": "An exposed Elasticsearch API can reveal indices or documents without authentication.",
+      "prevention": null
+    }
+  ],
+  "order": 36
+}

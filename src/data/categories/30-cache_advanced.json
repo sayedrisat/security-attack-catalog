@@ -1,0 +1,57 @@
+{
+  "id": "cache_advanced",
+  "title": "Cache & CDN Advanced",
+  "description": "Cache-key, origin, and edge processing differences.",
+  "icon_key": "config",
+  "attacks": [
+    {
+      "name": "Cache key normalization",
+      "notes": "?x=1&x=2, case, trailing ?",
+      "desc": "Differing normalization of query parameters or paths can make a cache store one response under the wrong key.",
+      "prevention": "Define cache keys from the canonical request path, query, and relevant headers used by the origin."
+    },
+    {
+      "name": "Unkeyed header poisoning",
+      "notes": "X-Forwarded-Host cached",
+      "desc": "A header omitted from the cache key can poison a response served to later visitors.",
+      "prevention": "Include security-relevant headers in the cache key or ignore them before origin routing; do not cache tainted responses."
+    },
+    {
+      "name": "Fat GET poisoning",
+      "notes": "Body on GET cached",
+      "desc": "Some caches ignore GET bodies while an origin processes them, creating a response-key mismatch.",
+      "prevention": "Reject request bodies on GET where unsupported, and keep proxy and origin cache semantics aligned."
+    },
+    {
+      "name": "Cache deception",
+      "notes": "/account.css, /profile.js",
+      "desc": "A dynamic private page may be cached as a static-looking path and served to another visitor.",
+      "prevention": null
+    },
+    {
+      "name": "Vary header abuse",
+      "notes": "Missing Vary: Origin",
+      "desc": "Missing Vary directives can cause responses for one origin or content variant to be reused for another.",
+      "prevention": null
+    },
+    {
+      "name": "CDN origin bypass",
+      "notes": "Direct-to-origin Host spoof",
+      "desc": "Direct requests to an origin can bypass CDN or WAF rules if the origin accepts public traffic.",
+      "prevention": null
+    },
+    {
+      "name": "Edge-side include injection",
+      "notes": "<!--#include -->",
+      "desc": "Unsafe edge-side include processing can interpret attacker-controlled markup as an include directive.",
+      "prevention": null
+    },
+    {
+      "name": "Cache poisoning via cookies",
+      "notes": "Unkeyed cookie",
+      "desc": "If a response changes with a cookie that is not in the cache key, one user's content may reach another.",
+      "prevention": null
+    }
+  ],
+  "order": 30
+}

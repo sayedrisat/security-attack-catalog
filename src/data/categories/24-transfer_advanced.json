@@ -1,0 +1,75 @@
+{
+  "id": "transfer_advanced",
+  "title": "Upload / Download Advanced",
+  "description": "Upload, download, and response handling edge cases.",
+  "icon_key": "injection",
+  "attacks": [
+    {
+      "name": ".htaccess upload",
+      "notes": "Apache config takeover",
+      "desc": "Uploading .htaccess can change Apache behavior if uploads are served from a directory where overrides are honored.",
+      "prevention": "Reject uploaded server configuration files, store uploads outside executable web directories, and disable overrides there."
+    },
+    {
+      "name": "web.config upload",
+      "notes": "IIS takeover",
+      "desc": "Uploading web.config can alter IIS behavior if the file is placed in an active configuration directory.",
+      "prevention": "Reject web.config uploads and serve user files from storage that cannot change IIS configuration."
+    },
+    {
+      "name": "Filename path traversal",
+      "notes": "..%2f..%2fshell.php",
+      "desc": "An upload filename containing traversal syntax can escape the intended destination if path components are trusted.",
+      "prevention": "Generate server-side storage names and canonicalize paths before enforcing an upload destination."
+    },
+    {
+      "name": "Filename null byte",
+      "notes": "shell.php%00.jpg",
+      "desc": "A null byte can cause legacy filename checks and file APIs to disagree about an extension.",
+      "prevention": "Use modern file APIs and reject embedded nulls before extension or path validation."
+    },
+    {
+      "name": "Upload race condition",
+      "notes": "Overwrite between check and move",
+      "desc": "A file changed between validation and storage can bypass upload checks that are not atomic.",
+      "prevention": null
+    },
+    {
+      "name": "Upload size limit bypass",
+      "notes": "Chunked, oversized",
+      "desc": "Chunking or inconsistent length checks can let uploads exceed an intended size limit.",
+      "prevention": null
+    },
+    {
+      "name": "Content-Type mismatch",
+      "notes": "Extension vs MIME vs magic bytes",
+      "desc": "A mismatch between extension, declared MIME type, and file signature can make an unsafe upload appear allowed.",
+      "prevention": null
+    },
+    {
+      "name": "SVG → SSRF",
+      "notes": "<image href=\"http://...\">",
+      "desc": "An SVG renderer that fetches external references can be induced to request internal or remote URLs.",
+      "prevention": null
+    },
+    {
+      "name": "Range request abuse",
+      "notes": "Range: bytes=0-1 brute read",
+      "desc": "Range requests may expose unusual resource behavior or impose excessive work when limits are weak.",
+      "prevention": null
+    },
+    {
+      "name": "Partial content bypass",
+      "notes": "206 on auth-protected file",
+      "desc": "If partial-content responses skip authorization, protected file ranges may be disclosed.",
+      "prevention": null
+    },
+    {
+      "name": "Download filename injection",
+      "notes": "CRLF in Content-Disposition",
+      "desc": "Untrusted filenames in Content-Disposition can inject or corrupt response headers if not encoded safely.",
+      "prevention": null
+    }
+  ],
+  "order": 24
+}

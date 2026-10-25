@@ -1,0 +1,63 @@
+{
+  "id": "realtime",
+  "title": "WebSocket, SSE & Realtime",
+  "description": "Security controls for persistent connections and browser messaging channels.",
+  "icon_key": "client",
+  "attacks": [
+    {
+      "name": "WS message fuzzing",
+      "notes": "Burp WS repeater, inject payloads",
+      "desc": "Untrusted WebSocket messages may reach application logic without the same validation used for HTTP requests.",
+      "prevention": "Validate every WebSocket message against a schema and apply authorization to the action it requests."
+    },
+    {
+      "name": "WS missing origin check",
+      "notes": "Cross-origin WS connect",
+      "desc": "A missing WebSocket Origin check can allow another website to initiate an authenticated connection.",
+      "prevention": "Check the WebSocket Origin against an explicit allowlist and require an authenticated handshake."
+    },
+    {
+      "name": "WS auth on connect only",
+      "notes": "Token checked once, never again",
+      "desc": "Checking a token only at connection time can leave an open channel active after revocation or permission changes.",
+      "prevention": "Revalidate permissions for sensitive WebSocket actions and close sessions after token revocation or expiry."
+    },
+    {
+      "name": "WS smuggling",
+      "notes": "Frame-level payload injection",
+      "desc": "Disagreement about WebSocket frame boundaries may let payload bytes bypass intermediary inspection.",
+      "prevention": null
+    },
+    {
+      "name": "WS no rate limit",
+      "notes": "Flood messages",
+      "desc": "Unlimited WebSocket messages can exhaust resources or amplify an application operation.",
+      "prevention": null
+    },
+    {
+      "name": "SSE injection",
+      "notes": "Event stream data injection",
+      "desc": "Unescaped content in an SSE stream can change how a client interprets event fields.",
+      "prevention": null
+    },
+    {
+      "name": "SSE auth bypass",
+      "notes": "Unauth SSE subscribe",
+      "desc": "An unauthenticated SSE subscription can expose events intended for a particular user or tenant.",
+      "prevention": null
+    },
+    {
+      "name": "BroadcastChannel leakage",
+      "notes": "Cross-tab read",
+      "desc": "BroadcastChannel messages can expose sensitive state to another same-origin page or tab.",
+      "prevention": null
+    },
+    {
+      "name": "SharedWorker abuse",
+      "notes": "Shared state leak",
+      "desc": "SharedWorker state can leak across same-origin contexts when message recipients are not isolated.",
+      "prevention": null
+    }
+  ],
+  "order": 19
+}

@@ -1,0 +1,333 @@
+{
+  "id": "injection",
+  "title": "Injection",
+  "description": "Flaws occurring when untrusted user input is concatenated into interpreters (SQL, OS commands, templates, parsers, serializers) and executed as native code.",
+  "icon": "terminal",
+  "attacks": [
+    {
+      "name": "SQL injection — error-based",
+      "notes": "database syntax errors",
+      "desc": "Forcing database syntax errors (e.g. via CONVERT, CAST, or extractvalue) that reflect query results or internal database error messages directly in the HTTP response.",
+      "prevention": "Use parameterized SQL queries; do not concatenate untrusted values into query strings, even when errors are hidden."
+    },
+    {
+      "name": "SQL injection — union-based",
+      "notes": "UNION SELECT exfiltration",
+      "desc": "Appending UNION SELECT operators to vulnerable queries to combine results from targeted system tables into the original query result set rendered on screen.",
+      "prevention": "Bind query values with prepared statements and allowlist any dynamic identifiers such as sort columns."
+    },
+    {
+      "name": "SQL injection — boolean blind",
+      "notes": "true/false inference",
+      "desc": "Inferring database contents character by character by injecting true/false SQL conditions and observing subtle application behavior differences (content changes, missing elements).",
+      "prevention": "Use prepared statements for every query branch; blind responses still reveal unsafe string interpolation."
+    },
+    {
+      "name": "SQL injection — time-based blind",
+      "notes": "SLEEP / pg_sleep",
+      "desc": "Extracting information by injecting conditional sleep statements (e.g. WAITFOR DELAY, pg_sleep()) and measuring the exact server response delay to deduce data bits.",
+      "prevention": "Parameterize queries and set sensible timeouts; suppressing error output does not fix timing-based injection."
+    },
+    {
+      "name": "SQL injection — out-of-band",
+      "notes": "DNS exfil",
+      "desc": "Coercing the database server to perform outbound DNS lookups or SMB connections containing extracted data payloads (e.g. utl_http, master..xp_dirtree).",
+      "prevention": "Bind values and limit database network egress so an injection cannot invoke external lookup channels."
+    },
+    {
+      "name": "SQL injection — second order",
+      "notes": "stored payload execution",
+      "desc": "Storing an injection payload safely into the database during an initial transaction, which is later retrieved and concatenated unsafely into a secondary SQL query.",
+      "prevention": "Parameterize both the original write and any later query that consumes stored user-controlled data."
+    },
+    {
+      "name": "NoSQL injection",
+      "notes": "MongoDB $ne, $gt",
+      "desc": "Injecting NoSQL query operators (such as $ne, $gt, $regex) via JSON payloads or parsed parameters to alter document queries and bypass authentication.",
+      "prevention": "Use driver-supported structured query builders, validate value types, and reject operator keys from untrusted objects."
+    },
+    {
+      "name": "ORM injection",
+      "notes": "Hibernate HQL, Sequelize",
+      "desc": "Exploiting unsafe parameter concatenation or vulnerable methods inside Object-Relational Mapping layers to alter database query logic.",
+      "prevention": "Use ORM parameter binding and safe query APIs; do not splice untrusted fragments into raw query methods."
+    },
+    {
+      "name": "Command injection",
+      "notes": "system() / exec() shell",
+      "desc": "Injecting shell command separators (e.g. ;, &&, |, `) into parameters passed to operating system command execution functions to execute arbitrary shell commands.",
+      "prevention": "Avoid shell invocation when a direct API exists; otherwise pass fixed executables and validated arguments without a shell."
+    },
+    {
+      "name": "Blind command injection",
+      "notes": "asynchronous command execution",
+      "desc": "Executing operating system commands without visible stdout/stderr in responses, confirming execution via time delays (sleep) or out-of-band interactions.",
+      "prevention": "Use the same safe process APIs for background jobs, and monitor executions without assuming lack of output means safety."
+    },
+    {
+      "name": "Argument injection",
+      "notes": "CLI parameter flags",
+      "desc": "Passing crafted input into command-line utilities (e.g. curl, tar, git, sendmail) that get interpreted as command flags (e.g. -o, --output, --upload-file) to alter utility behavior.",
+      "prevention": "Separate program options from untrusted values with supported argument terminators and allowlist accepted parameters."
+    },
+    {
+      "name": "LDAP injection",
+      "notes": "directory query injection",
+      "desc": "Injecting LDAP filter syntax characters to manipulate directory search queries, enabling unauthorized user enumeration and privilege validation.",
+      "prevention": "Use safe LDAP filter builders or escape according to the exact LDAP context, rather than concatenating input."
+    },
+    {
+      "name": "XPath injection",
+      "notes": "XML database query abuse",
+      "desc": "Manipulating XPath queries used to search XML documents, bypassing authentication or retrieving hidden data nodes via logical expression injection.",
+      "prevention": "Use parameterized XPath expressions where supported and avoid building XPath syntax from raw strings."
+    },
+    {
+      "name": "SSTI — Jinja2",
+      "notes": "Python template sandbox escape",
+      "desc": "Injecting template syntax into Jinja2 templates (e.g. {{config.items()}} or python MRO traversal) to escape the sandbox and execute arbitrary system commands.",
+      "prevention": "Pass user content as template data, never as a Jinja2 template source; restrict template authoring to trusted code."
+    },
+    {
+      "name": "SSTI — Twig",
+      "notes": "PHP template injection",
+      "desc": "Exploiting template syntax evaluation in PHP Twig engines to execute functions such as system() or exec() through built-in filter abuse.",
+      "prevention": "Keep Twig templates trusted and pass untrusted text only as data with context-aware escaping."
+    },
+    {
+      "name": "SSTI — Freemarker / Velocity",
+      "notes": "Java template engine RCE",
+      "desc": "Injecting template tags into Apache FreeMarker or Velocity engines using built-in directives (e.g. ?api, ?new) to invoke Java classes and execute commands.",
+      "prevention": "Prevent untrusted users from editing Freemarker or Velocity template source, and run templates with restricted capabilities."
+    },
+    {
+      "name": "Expression Language injection",
+      "notes": "SpEL, OGNL",
+      "desc": "Injecting expressions into Spring SpEL, Apache Struts OGNL, or JSP EL to execute arbitrary Java methods within the server JVM runtime.",
+      "prevention": "Avoid evaluating untrusted SpEL or OGNL expressions; use fixed expressions and typed parameters instead."
+    },
+    {
+      "name": "XXE — in-band",
+      "notes": "XML external entity read",
+      "desc": "Supplying custom XML external entity definitions in user-submitted XML documents, forcing the XML parser to read and return local system files in the response.",
+      "prevention": "Disable external entities and DTDs in XML parsers, and use maintained parser settings for every XML entry point."
+    },
+    {
+      "name": "Blind XXE",
+      "notes": "OOB exfiltration",
+      "desc": "Exfiltrating file contents via out-of-band XML parameter entities when error messages and direct XML response echoes are suppressed.",
+      "prevention": "Apply the same entity restrictions to parsers used in background and asynchronous flows, and restrict outbound network access."
+    },
+    {
+      "name": "XXE via file upload",
+      "notes": "SVG, DOCX, XLSX",
+      "desc": "Embedding malicious XML external entity declarations inside uploaded document formats that are secretly ZIP archives of XML files (DOCX, XLSX) or vector images (SVG).",
+      "prevention": null
+    },
+    {
+      "name": "SSRF",
+      "notes": "server-side request forgery",
+      "desc": "Coercing a backend web server into making unintended network requests to arbitrary internal or external addresses, bypassing firewall boundaries.",
+      "prevention": null
+    },
+    {
+      "name": "Blind SSRF",
+      "notes": "unrendered backend requests",
+      "desc": "Triggering server-side requests where the response content is not returned to the client, verified via out-of-band DNS/HTTP listener logs or timing differences.",
+      "prevention": null
+    },
+    {
+      "name": "SSRF via DNS rebinding",
+      "notes": "TTL expiration spoofing",
+      "desc": "Bypassing IP address validation filters by utilizing a custom DNS server that returns a public IP during initial check, but resolves to 127.0.0.1 immediately on subsequent lookup.",
+      "prevention": null
+    },
+    {
+      "name": "SSRF to cloud metadata",
+      "notes": "169.254.169.254",
+      "desc": "Targeting cloud instance link-local metadata endpoints (e.g. http://169.254.169.254/latest/meta-data/) to harvest IAM temporary security credentials and machine tokens.",
+      "prevention": null
+    },
+    {
+      "name": "SSRF to internal services",
+      "notes": "intranet port scanning",
+      "desc": "Pivoting through vulnerable web servers to probe and exploit non-public internal services (Redis, Consul, Elasticsearch, Kubernetes kubelet) running on loopback or private LANs.",
+      "prevention": null
+    },
+    {
+      "name": "CRLF injection",
+      "notes": "Carriage Return Line Feed",
+      "desc": "Injecting \\r\\n sequences into user inputs reflected in HTTP response headers, allowing attackers to introduce arbitrary headers or inject HTML body content.",
+      "prevention": null
+    },
+    {
+      "name": "Header injection",
+      "notes": "arbitrary HTTP headers",
+      "desc": "Injecting unwanted HTTP headers into outgoing backend requests or incoming responses to alter caching, proxy routing, or security controls.",
+      "prevention": null
+    },
+    {
+      "name": "Email header injection",
+      "notes": "SMTP header manipulation",
+      "desc": "Inserting newline characters into web contact forms to inject CC, BCC, or Subject headers into backend mail systems, transforming the server into a spam relay.",
+      "prevention": null
+    },
+    {
+      "name": "Log injection / forging",
+      "notes": "log tampering & falsification",
+      "desc": "Injecting carriage returns and fake timestamp strings into logged inputs to corrupt audit trails, forge log events, or exploit vulnerable log parsing viewers.",
+      "prevention": null
+    },
+    {
+      "name": "Log4Shell / JNDI injection",
+      "notes": "log4j CVE-2021-44228",
+      "desc": "Exploiting recursive string lookup formatting in Apache Log4j to trigger JNDI lookups to LDAP/RMI servers, downloading and executing malicious Java bytecode.",
+      "prevention": null
+    },
+    {
+      "name": "CSV / formula injection",
+      "notes": "Excel command injection",
+      "desc": "Prefixing user input fields with =, +, -, or @ characters that execute dynamic DDE formulas or launch system applications when exported and opened in spreadsheet software.",
+      "prevention": null
+    },
+    {
+      "name": "HTTP Parameter Pollution",
+      "notes": "duplicate param parsing",
+      "desc": "Supplying duplicate parameter names (e.g. ?id=1&id=2) to exploit disparities between web servers and backend systems in parameter handling order to bypass WAF rules.",
+      "prevention": null
+    },
+    {
+      "name": "Java deserialization",
+      "notes": "ysoserial gadget chains",
+      "desc": "Submitting crafted serialized Java objects that trigger gadget chains (e.g. CommonsCollections, Spring) during readObject() deserialization, resulting in remote code execution.",
+      "prevention": null
+    },
+    {
+      "name": "PHP deserialization",
+      "notes": "unserialize() gadget chains",
+      "desc": "Passing malicious serialized strings to PHP unserialize(), invoking magic methods (__destruct, __wakeup, __toString) in application classes to execute arbitrary code.",
+      "prevention": null
+    },
+    {
+      "name": "Python pickle deserialization",
+      "notes": "pickle.loads() RCE",
+      "desc": "Supplying malicious Python pickle byte streams that implement __reduce__() to invoke os.system() or arbitrary callable functions during unpickling.",
+      "prevention": null
+    },
+    {
+      "name": ".NET ViewState deserialization",
+      "notes": "unencrypted ViewState RCE",
+      "desc": "Exploiting unencrypted or unvalidated ASP.NET __VIEWSTATE parameters with known validation keys to deserialize gadget chains (e.g. ActivitySurrogateSelector) for code execution.",
+      "prevention": null
+    },
+    {
+      "name": "Prototype pollution",
+      "notes": "Object.prototype tampering",
+      "desc": "Injecting properties via __proto__, constructor, or prototype into recursive object merge/clone functions, polluting the global JavaScript Object prototype.",
+      "prevention": null
+    },
+    {
+      "name": "ReDoS",
+      "notes": "catastrophic backtracking",
+      "desc": "Submitting crafted input strings to regular expressions with overlapping nested quantifiers, causing exponential backtracking that freezes the thread and CPU.",
+      "prevention": null
+    },
+    {
+      "name": "Insecure deserialization via cookies",
+      "notes": "serialized session tokens",
+      "desc": "Tampering with serialized session objects stored in cookies (e.g. Python pickle or Ruby Marshal) to execute arbitrary commands when unpacked by the server.",
+      "prevention": null
+    },
+    {
+      "name": "SSI injection",
+      "notes": "Server-Side Includes",
+      "desc": "Injecting Server-Side Include directives (e.g. <!--#exec cmd=\"id\" -->) into pages parsed by web servers with SSI enabled, resulting in command execution.",
+      "prevention": null
+    },
+    {
+      "name": "XSLT injection",
+      "notes": "extensible stylesheet RCE",
+      "desc": "Injecting into or providing arbitrary XSLT stylesheets processed by servers, invoking extension functions (e.g. system-property, php:function) to execute code.",
+      "prevention": null
+    },
+    {
+      "name": "LFI",
+      "notes": "Local File Inclusion",
+      "desc": "Manipulating file inclusion parameters in languages like PHP (include/require) to load and execute local files or logs containing injected script code.",
+      "prevention": null
+    },
+    {
+      "name": "RFI",
+      "notes": "Remote File Inclusion",
+      "desc": "Exploiting unvalidated file inclusion functions with allow_url_include enabled to load and execute scripts hosted on remote web servers.",
+      "prevention": null
+    },
+    {
+      "name": "PHP wrappers",
+      "notes": "php://filter, data://",
+      "desc": "Utilizing built-in PHP I/O streams such as php://filter to read base64-encoded source code, or data:// to inject and execute inline PHP code.",
+      "prevention": null
+    },
+    {
+      "name": "Arbitrary file read",
+      "notes": "unauthorized disk access",
+      "desc": "Supplying file paths to download or file-viewing endpoints lacking path traversal sanitation, allowing unauthorized retrieval of system and configuration files.",
+      "prevention": null
+    },
+    {
+      "name": "Arbitrary file write",
+      "notes": "filesystem overwrite",
+      "desc": "Controlling the destination filename and contents in upload or file-saving handlers to overwrite critical server files (cron jobs, authorized_keys, webshells).",
+      "prevention": null
+    },
+    {
+      "name": "File upload bypass — extension",
+      "notes": ".php5, .phtml, double ext",
+      "desc": "Bypassing file extension blocklists using alternative executable extensions (.php5, .phtml, .phar), double extensions (.php.png), or null bytes (.php%00.jpg).",
+      "prevention": null
+    },
+    {
+      "name": "File upload bypass — MIME / magic bytes",
+      "notes": "content-type spoofing",
+      "desc": "Bypassing server validation by spoofing the Content-Type request header or prepending legitimate file signature magic bytes (GIF89a) to executable webshells.",
+      "prevention": null
+    },
+    {
+      "name": "Zip slip",
+      "notes": "archive extraction traversal",
+      "desc": "Exploiting directory traversal filenames (../../shell.php) inside archive archives (ZIP, TAR) that write files outside target extraction directories during unpacking.",
+      "prevention": null
+    },
+    {
+      "name": "XML bomb / billion laughs",
+      "notes": "exponential entity expansion",
+      "desc": "Submitting XML documents with recursively defined entities that expand exponentially during parsing, causing memory exhaustion and process crashing.",
+      "prevention": null
+    },
+    {
+      "name": "JSON injection",
+      "notes": "JSON structure breakout",
+      "desc": "Injecting unescaped quotes and colons into concatenated JSON strings, modifying keys or altering payload structure sent to internal services.",
+      "prevention": null
+    },
+    {
+      "name": "YAML deserialization",
+      "notes": "PyYAML !!python/object",
+      "desc": "Exploiting unsafe YAML loaders (such as PyYAML yaml.load without SafeLoader) that instantiate arbitrary language objects and execute code on parse.",
+      "prevention": null
+    },
+    {
+      "name": "EL injection",
+      "notes": "Expression Language",
+      "desc": "Injecting into Java Unified Expression Language (${...}) evaluations in web frameworks to invoke runtime system commands.",
+      "prevention": null
+    },
+    {
+      "name": "H2 / HSQLDB console RCE",
+      "notes": "database console exploitation",
+      "desc": "Accessing exposed embedded database web consoles (H2 Database) and creating stored aliases or triggering JNDI lookups in JDBC URLs to achieve code execution.",
+      "prevention": null
+    }
+  ],
+  "order": 6
+}

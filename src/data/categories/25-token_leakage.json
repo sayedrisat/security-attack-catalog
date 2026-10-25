@@ -1,0 +1,57 @@
+{
+  "id": "token_leakage",
+  "title": "Token Leakage Channels",
+  "description": "Ways authentication tokens can escape their intended storage or audience.",
+  "icon_key": "auth",
+  "attacks": [
+    {
+      "name": "Referer leakage",
+      "notes": "Token in URL → third-party referer",
+      "desc": "Tokens placed in URLs can leak to another site through Referer headers when the browser sends the URL.",
+      "prevention": "Keep credentials and reset tokens out of URLs, set a strict Referrer-Policy, and avoid third-party content on sensitive pages."
+    },
+    {
+      "name": "Browser history leakage",
+      "notes": "Token in URL persists",
+      "desc": "Tokens embedded in visited URLs may remain in local browser history and synchronized records.",
+      "prevention": "Use one-time tokens in protected flows rather than URL-bearing long-lived credentials, and remove token parameters from history."
+    },
+    {
+      "name": "Log file leakage",
+      "notes": "Token in URL → access logs",
+      "desc": "Access logs can retain tokens included in URL paths or query strings.",
+      "prevention": "Send tokens in protected headers or bodies instead of URLs, and redact secrets from access and application logs."
+    },
+    {
+      "name": "postMessage token leak",
+      "notes": "* targetOrigin",
+      "desc": "Sending a token with postMessage to an overly broad target origin can expose it to an unintended window.",
+      "prevention": null
+    },
+    {
+      "name": "Autofill leakage",
+      "notes": "Hidden field autofill",
+      "desc": "Hidden or misplaced fields may receive stored credentials through browser autofill.",
+      "prevention": null
+    },
+    {
+      "name": "Browser sync leakage",
+      "notes": "Cross-device",
+      "desc": "Browser synchronization can carry URLs or other token-bearing data to another signed-in device.",
+      "prevention": null
+    },
+    {
+      "name": "Cache leakage",
+      "notes": "Token in cached response",
+      "desc": "Authenticated responses containing tokens can leak through shared caches or browser storage if cache rules are wrong.",
+      "prevention": null
+    },
+    {
+      "name": "Screenshot/OG leakage",
+      "notes": "Token in meta og:url",
+      "desc": "Metadata, previews, or screenshots can capture token-bearing URLs that were intended to stay private.",
+      "prevention": null
+    }
+  ],
+  "order": 25
+}

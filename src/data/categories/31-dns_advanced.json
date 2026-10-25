@@ -1,0 +1,57 @@
+{
+  "id": "dns_advanced",
+  "title": "DNS Advanced",
+  "description": "DNS resolution, delegation, and record hygiene.",
+  "icon_key": "infra",
+  "attacks": [
+    {
+      "name": "DNS rebinding",
+      "notes": "Low TTL → switch IP",
+      "desc": "A hostname that changes from public to private IP can bypass controls that check DNS only once.",
+      "prevention": "Resolve and recheck addresses after DNS changes, and block private or metadata destinations on every server-side request."
+    },
+    {
+      "name": "DNS tunneling",
+      "notes": "Data in TXT/query",
+      "desc": "DNS requests or records can carry data out of a network that permits resolver traffic.",
+      "prevention": "Restrict DNS egress to trusted resolvers and monitor unusual high-volume or encoded query patterns."
+    },
+    {
+      "name": "Wildcard DNS abuse",
+      "notes": "anything.target.com resolves",
+      "desc": "Wildcard records can make arbitrary subdomains resolve and may confuse host validation or tenant routing.",
+      "prevention": "Validate Host against an explicit allowlist and do not treat wildcard DNS as proof of tenant ownership."
+    },
+    {
+      "name": "CNAME chain hijack",
+      "notes": "Dangling mid-chain",
+      "desc": "A dangling target within a CNAME chain can allow another party to control the final destination.",
+      "prevention": null
+    },
+    {
+      "name": "Zone file leak",
+      "notes": "AXFR",
+      "desc": "An unauthorized AXFR response can reveal a DNS zone's hostnames and addresses.",
+      "prevention": null
+    },
+    {
+      "name": "DNS cache poisoning",
+      "notes": "",
+      "desc": "Forged DNS answers accepted by a resolver can redirect traffic to an unintended endpoint.",
+      "prevention": null
+    },
+    {
+      "name": "Subdomain enumeration via CT",
+      "notes": "crt.sh",
+      "desc": "Certificate transparency logs can reveal subdomains from publicly recorded certificate names.",
+      "prevention": null
+    },
+    {
+      "name": "MX/SPF/DMARC gaps",
+      "notes": "dig TXT, dig MX",
+      "desc": "Missing or weak mail DNS records can reduce spoofing protection or misroute email.",
+      "prevention": null
+    }
+  ],
+  "order": 31
+}

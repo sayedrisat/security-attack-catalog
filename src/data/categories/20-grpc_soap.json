@@ -1,0 +1,57 @@
+{
+  "id": "grpc_soap",
+  "title": "gRPC & SOAP",
+  "description": "Service metadata, message parsing, and authorization in RPC and SOAP interfaces.",
+  "icon_key": "injection",
+  "attacks": [
+    {
+      "name": "gRPC reflection",
+      "notes": "grpcurl host:443 list (TLS)",
+      "desc": "gRPC reflection can disclose service names, methods, and schemas when exposed to unauthorized clients.",
+      "prevention": "Disable gRPC reflection on public production endpoints unless needed, or require authentication before listing methods."
+    },
+    {
+      "name": "Protobuf field fuzzing",
+      "notes": "Wrong types, extra fields",
+      "desc": "Malformed or extra protobuf fields can expose inconsistent validation between generated code and application logic.",
+      "prevention": "Validate protobuf fields, types, ranges, and unknown-field policy before applying business logic."
+    },
+    {
+      "name": "gRPC auth bypass",
+      "notes": "Metadata header stripping",
+      "desc": "A gRPC service can lose authorization context if metadata headers are stripped or ignored between layers.",
+      "prevention": "Carry trusted identity metadata across every proxy hop and authorize each gRPC method on the server."
+    },
+    {
+      "name": "gRPC-Web abuse",
+      "notes": "Browser-reachable gRPC",
+      "desc": "A browser-reachable gRPC-Web endpoint may expose RPC methods that were assumed to be private.",
+      "prevention": null
+    },
+    {
+      "name": "SOAP action spoofing",
+      "notes": "Change SOAPAction header",
+      "desc": "Changing SOAPAction can route a request to a different operation if it is trusted over the signed body.",
+      "prevention": null
+    },
+    {
+      "name": "WS-Security bypass",
+      "notes": "Missing/weak signature",
+      "desc": "Weak or missing WS-Security signature checks can allow SOAP messages to be modified or forged.",
+      "prevention": null
+    },
+    {
+      "name": "SOAP XXE",
+      "notes": "XML body entity",
+      "desc": "Unsafe XML entity processing in SOAP bodies can expose files or trigger server-side requests.",
+      "prevention": null
+    },
+    {
+      "name": "WSDL exposure",
+      "notes": "/service?wsdl",
+      "desc": "A public WSDL document can disclose SOAP operations, parameters, and message structure.",
+      "prevention": null
+    }
+  ],
+  "order": 20
+}

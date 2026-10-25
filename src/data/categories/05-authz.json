@@ -1,0 +1,153 @@
+{
+  "id": "authz",
+  "title": "Authorization & Access Control",
+  "description": "Failures in enforcing granular permissions, privilege boundaries, object-level checks, and multi-tenant isolation.",
+  "icon": "key",
+  "attacks": [
+    {
+      "name": "IDOR",
+      "notes": "sequential/UUID object IDs",
+      "desc": "Manipulating direct references to internal database objects (e.g. changing /api/documents/1042 to /api/documents/1043) without server-side validation that the requesting user owns the record.",
+      "prevention": "Check object ownership or tenant membership on every request; never treat an object ID as authorization."
+    },
+    {
+      "name": "BOLA (API object-level)",
+      "notes": "Broken Object Level Auth",
+      "desc": "API endpoints that expose entity identifiers in URLs and fail to enforce user authorization checks on the target resource, enabling unauthorized data access across tenants.",
+      "prevention": "Apply object-level authorization after resolving the requested API resource, including nested and bulk operations."
+    },
+    {
+      "name": "BFLA (API function-level)",
+      "notes": "Broken Function Level Auth",
+      "desc": "API controllers that restrict UI buttons but fail to restrict access to administrative endpoints (e.g. PUT /api/v1/users/make_admin) from low-privileged user accounts.",
+      "prevention": "Authorize each API function by role and permission on the server, even when the UI hides the action."
+    },
+    {
+      "name": "Horizontal privilege escalation",
+      "notes": "user A → user B data",
+      "desc": "Gaining unauthorized access to private data, profile details, or operational functions belonging to peer accounts operating at the exact same privilege tier.",
+      "prevention": "Verify that the authenticated principal owns the requested data; test with two different regular accounts."
+    },
+    {
+      "name": "Vertical privilege escalation",
+      "notes": "user → admin",
+      "desc": "Exploiting flawed authorization logic to elevate standard user capabilities to those of a system administrator, compliance officer, or superuser.",
+      "prevention": "Enforce privileged operations through server-side roles and explicit policy checks, not client-supplied role values."
+    },
+    {
+      "name": "Missing function-level access control",
+      "notes": "unprotected controllers",
+      "desc": "Failing to attach role-based authorization annotations or middleware to server-side business actions, assuming hidden UI navigation provides security.",
+      "prevention": "Centralize permission checks for sensitive functions and deny access by default when no policy applies."
+    },
+    {
+      "name": "Forced browsing",
+      "notes": "direct URL entry",
+      "desc": "Accessing restricted resources or administrative modules by manually typing unlinked URLs directly into the browser address bar.",
+      "prevention": "Protect every route and resource directly on the server; a hidden link or obscure URL is not a control."
+    },
+    {
+      "name": "Path traversal / directory traversal",
+      "notes": "../ sequences",
+      "desc": "Supplying dot-dot-slash (../) sequences into file-handling parameters to escape intended web directory boundaries and access arbitrary server operating system files.",
+      "prevention": "Resolve and normalize paths before access checks, constrain file operations to an allowlisted directory, and reject escapes."
+    },
+    {
+      "name": "Parameter tampering",
+      "notes": "hidden field manipulation",
+      "desc": "Altering query strings, hidden HTML form fields, or JSON keys (e.g. 'is_admin': true, 'role': 'manager') to bypass client-side restrictions and influence backend authorization.",
+      "prevention": null
+    },
+    {
+      "name": "HTTP verb tampering",
+      "notes": "GET→POST→PUT bypass",
+      "desc": "Switching HTTP methods (e.g. changing a restricted GET request to HEAD, POST, or PUT) to bypass access filters configured exclusively for specific request verbs.",
+      "prevention": null
+    },
+    {
+      "name": "Mass assignment / over-posting",
+      "notes": "object auto-binding abuse",
+      "desc": "Submitting unexpected object properties during entity creation or updates that the backend framework automatically binds to internal model fields (e.g. binding 'role': 'admin' or 'verified': true).",
+      "prevention": null
+    },
+    {
+      "name": "Multi-tenant isolation break",
+      "notes": "cross-tenant leak",
+      "desc": "Querying shared multi-tenant databases without mandatory organizational scope filters (e.g. WHERE tenant_id = ?), leaking one corporate customer's proprietary data to another.",
+      "prevention": null
+    },
+    {
+      "name": "Role manipulation via request body",
+      "notes": "payload privilege injection",
+      "desc": "Injecting role attributes directly inside serialized API payloads during profile updates when the backend fails to sanitize updatable field allowlists.",
+      "prevention": null
+    },
+    {
+      "name": "API version downgrade",
+      "notes": "v2 → v1 weaker",
+      "desc": "Directing API calls to deprecated API endpoints (e.g. calling /api/v1/auth instead of /api/v2/auth) that remain online but lack recently introduced security controls and rate limits.",
+      "prevention": null
+    },
+    {
+      "name": "Hidden endpoint discovery",
+      "notes": "unmapped routes",
+      "desc": "Locating undocumented internal microservice routes and private testing handlers that bypass API gateway authorization policies.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL introspection leak",
+      "notes": "full schema dump",
+      "desc": "Executing GraphQL introspection queries (__schema, __type) against production endpoints to download the complete schema, queries, mutations, internal types, and field descriptions.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL field-level auth bypass",
+      "notes": "resolver permission gaps",
+      "desc": "Querying sensitive object fields that lack individual resolver authorization checks even when the parent query or root object was properly authorized.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL batching attack",
+      "notes": "array request abuse",
+      "desc": "Packaging multiple queries or mutations within a single HTTP request payload to bypass network-level rate limits and execute brute-force attacks against authentication endpoints.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL alias overloading",
+      "notes": "alias-based amplification",
+      "desc": "Using GraphQL query aliases to invoke the same intensive mutation or query hundreds of times within a single request, defeating per-request throttling.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL query depth / complexity DoS",
+      "notes": "nested query recursion",
+      "desc": "Submitting deeply nested circular GraphQL queries (e.g. user -> friends -> user -> friends) without server-side depth limits, exhausting server CPU and memory.",
+      "prevention": null
+    },
+    {
+      "name": "GraphQL IDOR",
+      "notes": "node ID tampering",
+      "desc": "Manipulating global relay Node IDs or query arguments in GraphQL queries to retrieve unauthorized objects across user boundaries.",
+      "prevention": null
+    },
+    {
+      "name": "Excessive data exposure",
+      "notes": "over-fetching",
+      "desc": "API endpoints returning complete backend database models containing sensitive user fields (hashes, PII, internal IDs) relying entirely on client-side code to filter what gets displayed.",
+      "prevention": null
+    },
+    {
+      "name": "Insecure API key handling",
+      "notes": "key in URL, client-side",
+      "desc": "Transmitting sensitive API keys in query string parameters (where they get logged in server access logs and browser histories) or embedding secret keys in public mobile/web code.",
+      "prevention": null
+    },
+    {
+      "name": "Referer-based access control bypass",
+      "notes": "header spoofing",
+      "desc": "Bypassing authorization controls on backend endpoints that erroneously rely on the client-supplied HTTP Referer header to verify that requests originated from an administrative page.",
+      "prevention": null
+    }
+  ],
+  "order": 5
+}

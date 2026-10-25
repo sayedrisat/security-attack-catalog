@@ -1,0 +1,81 @@
+{
+  "id": "language_types",
+  "title": "Type Confusion & Language Specifics",
+  "description": "Runtime coercion and language-specific input handling mistakes.",
+  "icon_key": "injection",
+  "attacks": [
+    {
+      "name": "JS == coercion",
+      "notes": "[]==0, \"0\"==false",
+      "desc": "JavaScript loose equality can make unlike values compare equal when an application expects exact identity.",
+      "prevention": "Use strict equality and explicit type conversion for security decisions instead of JavaScript loose equality."
+    },
+    {
+      "name": "Array vs string",
+      "notes": "param[]=x where string expected",
+      "desc": "Frameworks may parse repeated or bracketed parameters as arrays where application code expects a string.",
+      "prevention": "Reject unexpected arrays or objects at request boundaries when an endpoint expects one scalar value."
+    },
+    {
+      "name": "Object injection",
+      "notes": "param[__proto__][x]=1",
+      "desc": "Nested parameter syntax can inject object properties into a deserialized structure if input is not constrained.",
+      "prevention": "Allowlist object keys and block prototype-related names before merging untrusted nested parameters."
+    },
+    {
+      "name": "PHP magic hash",
+      "notes": "0e md5 collision",
+      "desc": "PHP loose comparisons can treat distinct hashes beginning with numeric-looking 0e strings as equal.",
+      "prevention": "Use strict comparisons for hashes and authentication values; never compare password hashes with PHP loose equality."
+    },
+    {
+      "name": "PHP loose compare",
+      "notes": "strcmp([]), in_array loose",
+      "desc": "PHP functions and loose comparisons can produce surprising results for arrays, strings, and numeric values.",
+      "prevention": null
+    },
+    {
+      "name": "Python bool is int",
+      "notes": "True == 1 in IDs",
+      "desc": "In Python, booleans are integer subclasses, so True can collide with numeric identifiers in careless comparisons.",
+      "prevention": null
+    },
+    {
+      "name": "Ruby nil/false truthiness",
+      "notes": "",
+      "desc": "Treating Ruby nil and false as interchangeable can confuse absent values with explicit negative decisions.",
+      "prevention": null
+    },
+    {
+      "name": "Integer overflow",
+      "notes": "Huge quantity",
+      "desc": "A value beyond an integer type's range can wrap or fail and alter quantity, balance, or index calculations.",
+      "prevention": null
+    },
+    {
+      "name": "Float precision",
+      "notes": "0.1+0.2 in money",
+      "desc": "Binary floating-point rounding can make money comparisons or totals differ from decimal expectations.",
+      "prevention": null
+    },
+    {
+      "name": "Format string",
+      "notes": "%s%n (rare)",
+      "desc": "Untrusted format strings can change output or memory behavior in affected formatting APIs.",
+      "prevention": null
+    },
+    {
+      "name": "Regex injection",
+      "notes": "User-controlled regex",
+      "desc": "A user-supplied regular expression can change matching logic or consume excessive CPU.",
+      "prevention": null
+    },
+    {
+      "name": "Expression evaluation",
+      "notes": "eval in filter params",
+      "desc": "Passing user input to an expression evaluator can turn a filter value into executable logic.",
+      "prevention": null
+    }
+  ],
+  "order": 29
+}

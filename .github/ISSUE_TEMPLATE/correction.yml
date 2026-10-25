@@ -1,0 +1,30 @@
+name: Correct an entry
+description: Report a misleading, duplicate, or inaccurate catalog entry.
+title: "Correction: "
+body:
+  - type: input
+    id: entry
+    attributes:
+      label: Entry and section
+      placeholder: Attack name — section name
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested wording
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Supporting source
+      placeholder: https://
+    validations:
+      required: true

@@ -1,0 +1,27 @@
+{
+  "id": "compression",
+  "title": "Compression Attacks",
+  "description": "Side channels created when compression behavior depends on hidden data.",
+  "icon_key": "crypto",
+  "attacks": [
+    {
+      "name": "BREACH",
+      "notes": "HTTP gzip + reflected token + secret",
+      "desc": "BREACH infers a secret from compressed HTTP response lengths when attacker input is reflected near it.",
+      "prevention": "Avoid compressing responses that mix secrets with attacker-controlled text; separate secrets and use per-request masking where needed."
+    },
+    {
+      "name": "HEIST",
+      "notes": "Timing + compression, no MITM",
+      "desc": "HEIST combines browser-visible timing with compression effects to infer cross-origin response size changes.",
+      "prevention": null
+    },
+    {
+      "name": "Compression oracle",
+      "notes": "Response length vs secret",
+      "desc": "A compression oracle leaks information when an attacker can vary input and observe output length beside a secret.",
+      "prevention": null
+    }
+  ],
+  "order": 15
+}

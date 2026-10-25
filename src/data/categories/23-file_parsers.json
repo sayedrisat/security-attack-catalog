@@ -1,0 +1,93 @@
+{
+  "id": "file_parsers",
+  "title": "File Format & Parser Exploits",
+  "description": "Risks in document, media, image, font, and archive processing.",
+  "icon_key": "client",
+  "attacks": [
+    {
+      "name": "ImageMagick (ImageTragick)",
+      "notes": "Malicious MVG/SVG upload",
+      "desc": "Affected ImageMagick delegates may interpret crafted image files as commands or unsafe resource references.",
+      "prevention": "Patch ImageMagick and its delegates, restrict risky coders, and process untrusted images in a sandbox."
+    },
+    {
+      "name": "Ghostscript RCE",
+      "notes": "PostScript in PDF",
+      "desc": "Affected Ghostscript versions may execute unsafe PostScript embedded in a document processed by the server.",
+      "prevention": "Keep Ghostscript patched, avoid processing unnecessary formats, and isolate document conversion from the host."
+    },
+    {
+      "name": "PDF.js exploitation",
+      "notes": "Malicious PDF in viewer",
+      "desc": "A malicious PDF can target bugs in a browser-based PDF viewer such as PDF.js.",
+      "prevention": "Update PDF.js promptly and apply browser isolation to documents from untrusted users."
+    },
+    {
+      "name": "SVG parser abuse",
+      "notes": "<use>, XXE, JS in SVG",
+      "desc": "SVG files can contain active content or external references that require careful handling and sanitization.",
+      "prevention": "Sanitize SVG or serve it as a download from a separate origin; block external references during processing."
+    },
+    {
+      "name": "DOCX/XLSX XXE",
+      "notes": "Unzip + edit document.xml",
+      "desc": "Unsafe XML parsing inside office documents can resolve external entities or access server-side resources.",
+      "prevention": "Disable external entities and network access in XML parsers used for office document extraction."
+    },
+    {
+      "name": "XLSX formula injection",
+      "notes": "=cmd|'/c calc'!A1",
+      "desc": "Spreadsheet formulas can execute actions or fetch data when a user opens an untrusted XLSX file.",
+      "prevention": null
+    },
+    {
+      "name": "CSV injection",
+      "notes": "=HYPERLINK, =cmd",
+      "desc": "CSV cells beginning with formula characters can be interpreted as commands or links by spreadsheet software.",
+      "prevention": null
+    },
+    {
+      "name": "Polyglot file",
+      "notes": "GIF+JS, JPG+PHP",
+      "desc": "A file valid in multiple formats can pass one validator yet be interpreted differently by another component.",
+      "prevention": null
+    },
+    {
+      "name": "Font parser abuse",
+      "notes": "Malicious TTF/WOFF",
+      "desc": "Malformed font data can target vulnerabilities in software that decodes TTF or WOFF files.",
+      "prevention": null
+    },
+    {
+      "name": "Video container abuse",
+      "notes": "MP4 atom parsing",
+      "desc": "Malformed media container metadata can trigger parser faults in video processing components.",
+      "prevention": null
+    },
+    {
+      "name": "EXIF abuse",
+      "notes": "Metadata XSS, path traversal in filename",
+      "desc": "Untrusted EXIF fields or filenames can become an injection source when displayed or used as paths.",
+      "prevention": null
+    },
+    {
+      "name": "Archive symlink",
+      "notes": "tar/zip symlink escape",
+      "desc": "Archive entries that are symbolic links can redirect extraction outside the intended destination.",
+      "prevention": null
+    },
+    {
+      "name": "Nested zip bomb",
+      "notes": "Recursive decompression",
+      "desc": "Deeply nested archives can exhaust storage or compute during recursive extraction.",
+      "prevention": null
+    },
+    {
+      "name": "Zip path traversal",
+      "notes": "../../evil.php in zip",
+      "desc": "Archive member names containing parent paths can write files outside the extraction directory.",
+      "prevention": null
+    }
+  ],
+  "order": 23
+}

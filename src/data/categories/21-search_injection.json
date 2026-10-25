@@ -1,0 +1,45 @@
+{
+  "id": "search_injection",
+  "title": "Search Engine & Query Injection",
+  "description": "Query languages and search backends that may interpret untrusted input.",
+  "icon_key": "injection",
+  "attacks": [
+    {
+      "name": "Elasticsearch injection",
+      "notes": "Query DSL injection via user input",
+      "desc": "Untrusted input embedded in Elasticsearch Query DSL can change the query logic or expose unintended documents.",
+      "prevention": "Build Elasticsearch queries with typed server-side structures, not untrusted Query DSL fragments."
+    },
+    {
+      "name": "Lucene special chars",
+      "notes": "*, ?, AND, OR, ~",
+      "desc": "Lucene operators can broaden or alter a search when user input is treated as query syntax.",
+      "prevention": "Treat search text as literal input or explicitly escape Lucene operators before building a query."
+    },
+    {
+      "name": "Solr injection",
+      "notes": "/solr/admin, param injection",
+      "desc": "Solr parameters or administrative endpoints may accept input that changes queries or exposes configuration.",
+      "prevention": null
+    },
+    {
+      "name": "Mongo $where JS execution",
+      "notes": "$where: \"sleep(5000)\"",
+      "desc": "MongoDB's $where operator can execute JavaScript expressions if an application passes attacker-controlled values to it.",
+      "prevention": null
+    },
+    {
+      "name": "Aggregation pipeline injection",
+      "notes": "$lookup, $match",
+      "desc": "Untrusted aggregation stages can change joins, filters, or document selection in a database query.",
+      "prevention": null
+    },
+    {
+      "name": "OpenSearch/Atlas injection",
+      "notes": "",
+      "desc": "Managed search or database services can still be vulnerable when applications construct queries from untrusted input.",
+      "prevention": null
+    }
+  ],
+  "order": 21
+}

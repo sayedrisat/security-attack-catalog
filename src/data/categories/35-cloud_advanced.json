@@ -1,0 +1,129 @@
+{
+  "id": "cloud_advanced",
+  "title": "Cloud / IaC / Supply Chain Advanced",
+  "description": "Cloud identity, infrastructure-as-code, containers, and build pipelines.",
+  "icon_key": "cloud",
+  "attacks": [
+    {
+      "name": "Terraform state file",
+      "notes": "terraform.tfstate public",
+      "desc": "A public Terraform state file can contain infrastructure addresses, resource attributes, and sensitive outputs.",
+      "prevention": "Keep Terraform state in encrypted private storage with scoped access, versioning, and secret handling."
+    },
+    {
+      "name": "CloudFormation outputs",
+      "notes": "CFN exports",
+      "desc": "Public CloudFormation outputs may expose service endpoints or resource identifiers.",
+      "prevention": "Avoid exporting secrets from CloudFormation; restrict stack-output visibility to authorized operators."
+    },
+    {
+      "name": "IaC misconfig",
+      "notes": "Public SG, open bucket",
+      "desc": "Infrastructure-as-code errors can deploy overly broad network access or public storage permissions.",
+      "prevention": "Review IaC changes for public security groups, storage exposure, and broad roles before deployment."
+    },
+    {
+      "name": "Lambda env vars",
+      "notes": "Via SSRF or console",
+      "desc": "Exposed serverless environment variables can contain credentials or internal service configuration.",
+      "prevention": "Limit access to Lambda configuration, avoid long-lived secrets in environment variables, and use a secret manager."
+    },
+    {
+      "name": "Lambda event injection",
+      "notes": "Malformed event JSON",
+      "desc": "Untrusted event fields may reach dangerous operations inside a serverless function without validation.",
+      "prevention": "Validate event schemas and never interpret event fields as commands or expressions."
+    },
+    {
+      "name": "Cloud IAM role confusion",
+      "notes": "Confused deputy",
+      "desc": "A confused-deputy IAM relationship can let another principal use privileges outside the intended trust scope.",
+      "prevention": "Set explicit IAM trust conditions and external IDs where applicable, and restrict who can assume privileged roles."
+    },
+    {
+      "name": "S3 ACL vs policy mismatch",
+      "notes": "",
+      "desc": "Conflicting bucket ACL and policy settings can produce unexpected access to S3 objects.",
+      "prevention": "Audit bucket ACLs and policies together, block public access by default, and test effective permissions."
+    },
+    {
+      "name": "CloudFront origin leak",
+      "notes": "",
+      "desc": "Origin details leaked outside CloudFront can make direct-to-origin traffic possible if network rules allow it.",
+      "prevention": null
+    },
+    {
+      "name": "Container registry exposure",
+      "notes": "Public ECR/GCR",
+      "desc": "A public container registry may expose images containing application code, dependencies, or secrets.",
+      "prevention": null
+    },
+    {
+      "name": "Docker socket mount",
+      "notes": "/var/run/docker.sock",
+      "desc": "A container with access to the host Docker socket can control the daemon and potentially the host.",
+      "prevention": null
+    },
+    {
+      "name": "K8s API anonymous",
+      "notes": "curl host:6443",
+      "desc": "An anonymous Kubernetes API endpoint can expose cluster resources or operations if authorization is weak.",
+      "prevention": null
+    },
+    {
+      "name": "K8s RBAC misconfig",
+      "notes": "Over-permissive SA",
+      "desc": "Overly broad Kubernetes service-account permissions can let one workload access unrelated resources.",
+      "prevention": null
+    },
+    {
+      "name": "Helm/Tiller exposure",
+      "notes": "",
+      "desc": "Legacy Helm/Tiller exposure can grant extensive cluster operations to an unauthorized client.",
+      "prevention": null
+    },
+    {
+      "name": "CI secret leakage",
+      "notes": "Env in logs",
+      "desc": "Build logs can reveal credentials or tokens if secret values are printed during CI jobs.",
+      "prevention": null
+    },
+    {
+      "name": "Dependency confusion",
+      "notes": "Public pkg > private name",
+      "desc": "A public package with a private dependency's name can be selected by an unsafe package-resolution setup.",
+      "prevention": null
+    },
+    {
+      "name": "Typosquat package",
+      "notes": "Lookalike npm/pip",
+      "desc": "A lookalike package name can trick a maintainer into installing attacker-controlled code.",
+      "prevention": null
+    },
+    {
+      "name": "Lockfile tampering",
+      "notes": "Pin to malicious ver",
+      "desc": "Changing a lockfile can pin a project to a malicious or unintended dependency version.",
+      "prevention": null
+    },
+    {
+      "name": "Post-install script RCE",
+      "notes": "npm install hooks",
+      "desc": "Package lifecycle hooks can execute code during installation when a dependency is untrusted.",
+      "prevention": null
+    },
+    {
+      "name": "GitHub Actions injection",
+      "notes": "${{ github.event }} in run",
+      "desc": "Untrusted workflow event text can become shell commands when inserted directly into a GitHub Actions run step.",
+      "prevention": null
+    },
+    {
+      "name": "Artifact poisoning",
+      "notes": "CI artifact swap",
+      "desc": "Replacing a CI artifact can make later jobs deploy or execute content that was not produced by the trusted build.",
+      "prevention": null
+    }
+  ],
+  "order": 35
+}

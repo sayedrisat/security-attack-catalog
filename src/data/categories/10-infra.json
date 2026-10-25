@@ -1,0 +1,153 @@
+{
+  "id": "infra",
+  "title": "Infrastructure",
+  "description": "Vulnerabilities in network perimeters, unauthenticated administrative datastores, virtualization daemons, and legacy protocols.",
+  "icon": "server",
+  "attacks": [
+    {
+      "name": "Open ports / unnecessary services",
+      "notes": "unhardened perimeter",
+      "desc": "Exposing non-essential management daemons, legacy test ports, and unhardened network services directly to the public Internet without firewall rules.",
+      "prevention": "Remove unnecessary network listeners and restrict required ports with host and network firewalls."
+    },
+    {
+      "name": "Exposed databases",
+      "notes": "3306, 5432, 6379, 27017",
+      "desc": "Leaving production database engines (MySQL, PostgreSQL, MongoDB) accessible to the public Internet without IP filtering, opening avenues for automated credential brute-forcing.",
+      "prevention": "Keep databases on private networks, require authentication and TLS, and restrict inbound access to application hosts."
+    },
+    {
+      "name": "Unauthenticated Redis",
+      "notes": "remote command execution",
+      "desc": "Deploying Redis instances without password authentication, allowing attackers to read/write in-memory data, overwrite authorized_keys, or write malicious crontabs.",
+      "prevention": "Bind Redis to a private interface, require authentication and ACLs, and block public network access."
+    },
+    {
+      "name": "Open Elasticsearch",
+      "notes": "unrestricted cluster exfiltration",
+      "desc": "Exposing Elasticsearch HTTP REST APIs (port 9200) without authentication, enabling arbitrary search queries, document deletion, and complete cluster indexing exfiltration.",
+      "prevention": "Require Elasticsearch authentication and network restrictions; expose only intended APIs through a secured gateway."
+    },
+    {
+      "name": "Exposed Docker API",
+      "notes": "2375/2376 unauthenticated socket",
+      "desc": "Leaving Docker engine TCP sockets exposed without mutual TLS, allowing attackers to spin up privileged containers mounting the host filesystem for instant root takeover.",
+      "prevention": "Do not expose the Docker API publicly; use protected sockets and narrowly scoped access for automation."
+    },
+    {
+      "name": "Exposed Kubernetes API",
+      "notes": "kube-apiserver anonymous bind",
+      "desc": "Allowing anonymous access to Kubernetes API servers (port 6443) or kubelet endpoints (port 10250), permitting pod creation, secret extraction, and cluster compromise.",
+      "prevention": "Disable anonymous Kubernetes API access and require RBAC, network controls, and audited credentials."
+    },
+    {
+      "name": "Exposed CI/CD",
+      "notes": "Jenkins, GitLab, TeamCity",
+      "desc": "Exposing continuous integration controllers without strict authentication, allowing attackers to execute arbitrary pipeline scripts and steal build secrets.",
+      "prevention": "Protect CI/CD interfaces with SSO and MFA, patch them, and restrict access to trusted networks."
+    },
+    {
+      "name": "Exposed monitoring",
+      "notes": "Grafana, Prometheus, Kibana",
+      "desc": "Leaving infrastructure monitoring dashboards open without authentication, revealing network topologies, environment variables, internal hostnames, and application metrics.",
+      "prevention": "Require authentication for monitoring dashboards and redact sensitive metrics and labels."
+    },
+    {
+      "name": "SNMP enumeration",
+      "notes": "public/private community strings",
+      "desc": "Querying Simple Network Management Protocol agents using default community strings ('public', 'private') to map hardware specs, routing tables, and interface addresses.",
+      "prevention": null
+    },
+    {
+      "name": "SMB / NetBIOS enumeration",
+      "notes": "null session shares",
+      "desc": "Establishing anonymous or guest SMB sessions across ports 139/445 to list network shares, active domain users, password policies, and system services.",
+      "prevention": null
+    },
+    {
+      "name": "Anonymous FTP",
+      "notes": "unrestricted anonymous read/write",
+      "desc": "Permitting anonymous logins on FTP servers, allowing unauthorized visitors to download proprietary assets or upload malicious webshells into web roots.",
+      "prevention": null
+    },
+    {
+      "name": "Open SMTP relay",
+      "notes": "unauthenticated email forwarding",
+      "desc": "Misconfiguring mail transfer agents to accept and deliver unauthenticated email destined for external domains, turning servers into spam and phishing relays.",
+      "prevention": null
+    },
+    {
+      "name": "DNS misconfig",
+      "notes": "SPF, DKIM, DMARC missing",
+      "desc": "Omitting or misconfiguring SPF, DKIM, and DMARC policy records, allowing cybercriminals to forge and deliver spoofed emails appearing to originate from the legitimate corporate domain.",
+      "prevention": null
+    },
+    {
+      "name": "Email spoofing",
+      "notes": "sender forgery",
+      "desc": "Exploiting missing domain email authentication policies to send forged email communications to customers and employees for credential harvesting and invoice fraud.",
+      "prevention": null
+    },
+    {
+      "name": "IPv6 exposure",
+      "notes": "dual-stack firewall bypass",
+      "desc": "Enabling dual-stack IPv6 routing where hosts lack the rigorous firewall rules and intrusion detection protections applied to primary IPv4 interfaces.",
+      "prevention": null
+    },
+    {
+      "name": "Cloud metadata service abuse",
+      "notes": "IMDSv1 credential theft",
+      "desc": "Exploiting SSRF or uncontained local code execution to query Instance Metadata Service v1 (which lacks header tokens) to steal instance IAM role keys.",
+      "prevention": null
+    },
+    {
+      "name": "Pivoting into internal network",
+      "notes": "lateral movement tunnel",
+      "desc": "Using a compromised perimeter web server as a network proxy (via SSH tunnels, chisel, or socat) to route traffic into protected corporate and VPC subnets.",
+      "prevention": null
+    },
+    {
+      "name": "Outdated software / CVE matching",
+      "notes": "unpatched daemons",
+      "desc": "Running unpatched operating system packages, web servers (Apache, Nginx), or runtimes containing published high-severity CVEs with known public exploit scripts.",
+      "prevention": null
+    },
+    {
+      "name": "Public PoC application",
+      "notes": "weaponized exploit execution",
+      "desc": "Applying publicly available Proof of Concept exploit code against vulnerable internet-facing applications and perimeter infrastructure.",
+      "prevention": null
+    },
+    {
+      "name": "Banner grabbing",
+      "notes": "service intelligence gathering",
+      "desc": "Connecting to open TCP/UDP sockets to inspect returned service banners, software names, and operating system build information for targeted vulnerability mapping.",
+      "prevention": null
+    },
+    {
+      "name": "Network topology mapping",
+      "notes": "traceroute & TTL analysis",
+      "desc": "Analyzing network hops, ICMP responses, and TCP packet TTL behaviors to determine perimeter firewall layouts, NAT gateways, and load balancer configurations.",
+      "prevention": null
+    },
+    {
+      "name": "VPN / portal exposure",
+      "notes": "corporate gateway targeting",
+      "desc": "Targeting internet-facing SSL-VPN gateways (Pulse Secure, Fortinet, Cisco) with known authentication bypasses or unpatched buffer overflow CVEs.",
+      "prevention": null
+    },
+    {
+      "name": "LDAP anonymous bind",
+      "notes": "unauthenticated active directory queries",
+      "desc": "Connecting to LDAP directory servers without credentials to enumerate all domain users, group memberships, computer accounts, and access control lists.",
+      "prevention": null
+    },
+    {
+      "name": "NFS share enumeration",
+      "notes": "unrestricted export mounts",
+      "desc": "Mounting Network File System shares exported with 'no_root_squash' or unrestricted IP access to read corporate backups or inject root-owned binaries.",
+      "prevention": null
+    }
+  ],
+  "order": 10
+}

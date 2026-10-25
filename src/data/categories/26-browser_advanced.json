@@ -1,0 +1,105 @@
+{
+  "id": "browser_advanced",
+  "title": "Browser Feature & Client-Side Advanced",
+  "description": "Browser features, DOM behavior, and client-side isolation boundaries.",
+  "icon_key": "client",
+  "attacks": [
+    {
+      "name": "DOM clobbering",
+      "notes": "id=foo shadows window.foo",
+      "desc": "An injected element ID or name can shadow JavaScript globals and alter client-side logic.",
+      "prevention": "Avoid relying on clobberable global names; use explicit DOM queries and validate returned node types."
+    },
+    {
+      "name": "Shadow DOM XSS",
+      "notes": "Injection inside shadow root",
+      "desc": "Unsafe rendering inside a shadow root can still create XSS; shadow DOM does not sanitize content.",
+      "prevention": "Treat shadow-root insertion as a real HTML sink and sanitize or encode untrusted content before rendering."
+    },
+    {
+      "name": "Angular sandbox escape",
+      "notes": "Older AngularJS",
+      "desc": "Older AngularJS expression contexts may allow code execution when untrusted content reaches a template.",
+      "prevention": "Upgrade unsupported AngularJS code and avoid compiling untrusted strings as framework templates."
+    },
+    {
+      "name": "Vue/React escape",
+      "notes": "v-html, dangerouslySetInnerHTML",
+      "desc": "Unsafe HTML escape hatches such as v-html or dangerouslySetInnerHTML can render attacker-controlled markup.",
+      "prevention": "Use framework text rendering by default; sanitize any content passed to v-html or dangerouslySetInnerHTML."
+    },
+    {
+      "name": "CSS exfiltration",
+      "notes": "Attribute selectors leak input values",
+      "desc": "Injected CSS may infer attribute values through conditional selectors and observable resource loads.",
+      "prevention": "Do not let users inject arbitrary CSS into pages that display secrets; use scoped design tokens and a restrictive CSP."
+    },
+    {
+      "name": "Font-based exfil",
+      "notes": "unicode-range side channel",
+      "desc": "Font selection and glyph loading can form a side channel for characters rendered in protected text.",
+      "prevention": "Limit untrusted styles and external font loads near sensitive text, and review font requests as potential side channels."
+    },
+    {
+      "name": "CSP bypass",
+      "notes": "JSONP, weak base-uri, nonce reuse, policy interactions",
+      "desc": "Weak CSP sources, nonces, or policy structure can leave script execution paths open.",
+      "prevention": null
+    },
+    {
+      "name": "Trusted Types bypass",
+      "notes": "Sink not covered",
+      "desc": "Trusted Types helps cover DOM injection sinks, but uncovered sinks or policy misuse can still allow injection.",
+      "prevention": null
+    },
+    {
+      "name": "SRI bypass",
+      "notes": "No hash, or hash on wrong file",
+      "desc": "Missing or mismatched integrity metadata leaves third-party scripts open to replacement without hash detection.",
+      "prevention": null
+    },
+    {
+      "name": "iframe sandbox escape",
+      "notes": "allow-scripts allow-same-origin combo",
+      "desc": "Combining script execution and same-origin access in an iframe sandbox can undermine its intended isolation.",
+      "prevention": null
+    },
+    {
+      "name": "Drag & drop injection",
+      "notes": "dataTransfer content",
+      "desc": "Untrusted drag-and-drop data can become active content if the application inserts it without validation.",
+      "prevention": null
+    },
+    {
+      "name": "Clipboard hijack",
+      "notes": "navigator.clipboard",
+      "desc": "A page with enough clipboard permission can replace copied content and mislead a later paste.",
+      "prevention": null
+    },
+    {
+      "name": "WebRTC IP leak",
+      "notes": "STUN request",
+      "desc": "WebRTC candidate gathering may reveal network addresses depending on browser privacy protections.",
+      "prevention": null
+    },
+    {
+      "name": "Sensor/Bluetooth/USB abuse",
+      "notes": "Permission prompts",
+      "desc": "Device APIs expose sensitive capabilities only under supported browser security and permission rules.",
+      "prevention": null
+    },
+    {
+      "name": "Service worker takeover",
+      "notes": "Scope hijack",
+      "desc": "A service worker registered under an overly broad scope can intercept later same-origin requests.",
+      "prevention": null
+    },
+    {
+      "name": "PWA manifest abuse",
+      "notes": "start_url redirect",
+      "desc": "An unsafe PWA start URL or manifest field can redirect launches or misrepresent the installed app.",
+      "prevention": null
+    }
+  ],
+  "order": 26
+}

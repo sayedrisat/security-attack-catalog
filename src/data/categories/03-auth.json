@@ -1,0 +1,261 @@
+{
+  "id": "auth",
+  "title": "Authentication",
+  "description": "Flaws in verifying user identities, managing credentials, enforcing multi-factor challenges, issuing tokens, and validating federation protocols.",
+  "icon": "shield-check",
+  "attacks": [
+    {
+      "name": "Username enumeration",
+      "notes": "timing, error, status diff",
+      "desc": "Deducing valid usernames or email addresses by observing subtle differences in server response codes, error messages ('User not found' vs 'Invalid password'), or response latency.",
+      "prevention": "Return uniform login and recovery responses, avoid distinguishable account states, and monitor enumeration attempts."
+    },
+    {
+      "name": "Password brute force",
+      "notes": "hydra, custom scripts",
+      "desc": "Systematically submitting permutations of common passwords against target login portals without adequate rate-limiting or automated throttling in place.",
+      "prevention": "Rate-limit login attempts per account and source, add progressive friction, and require MFA for sensitive accounts."
+    },
+    {
+      "name": "Credential stuffing",
+      "notes": "automated replay",
+      "desc": "Testing massive databases of breached username/password pairs harvested from third-party compromises against targeted portals to exploit pervasive password reuse.",
+      "prevention": "Detect unusual login patterns, block known compromised passwords, and encourage MFA rather than relying only on IP limits."
+    },
+    {
+      "name": "Password spraying",
+      "notes": "low-and-slow",
+      "desc": "Submitting a single highly common password (e.g. SeasonYear!) across thousands of distinct enterprise user accounts at slow intervals to circumvent account lockout thresholds.",
+      "prevention": "Apply account-aware rate limits and anomaly detection to low-volume attempts across many usernames."
+    },
+    {
+      "name": "Default credential login",
+      "notes": "factory passwords",
+      "desc": "Authenticating successfully using well-known vendor standard credentials (admin:admin, guest:guest) that were never rotated during deployment.",
+      "prevention": "Change default passwords before service exposure and disable accounts that cannot be secured."
+    },
+    {
+      "name": "Weak password policy abuse",
+      "notes": "short / simple passwords",
+      "desc": "Exploiting lax password complexity and length requirements to establish trivially guessable credentials susceptible to fast offline or online dictionary attacks.",
+      "prevention": "Screen passwords against breached lists, allow long passphrases, and store only strong salted password hashes."
+    },
+    {
+      "name": "MFA / 2FA bypass",
+      "notes": "direct endpoint navigation",
+      "desc": "Subverting two-factor authentication prompts through direct API endpoint invocation, session state manipulation, forcing legacy protocol fallbacks, or replaying authentication tokens.",
+      "prevention": "Bind MFA completion to the same server-side login transaction; never trust client flags that claim a challenge passed."
+    },
+    {
+      "name": "OTP brute force (short codes)",
+      "notes": "unrestricted attempts",
+      "desc": "Brute-forcing 4-digit or 6-digit one-time passcodes when the verification handler lacks strict attempt limits, rate-limiting, and account-locking mechanisms.",
+      "prevention": "Limit OTP attempts per account and challenge, expire codes quickly, and lock or slow repeated failures."
+    },
+    {
+      "name": "OTP reuse / no expiry",
+      "notes": "replay of valid codes",
+      "desc": "Reusing previously consumed one-time passcodes or submitting codes long after generation due to missing invalidation flags or absent expiration timestamps.",
+      "prevention": "Make each OTP single-use with a short expiry and invalidate earlier codes when issuing a replacement."
+    },
+    {
+      "name": "OTP bypass via response manipulation",
+      "notes": "flip 'success':false",
+      "desc": "Intercepting the server's verification response through an intercepting proxy and altering error indicators (such as changing JSON 'status': 400 to 200 or 'success': false to true) to force client-side authentication progression.",
+      "prevention": "Verify the challenge result on the server before creating a session; ignore modified client responses."
+    },
+    {
+      "name": "Remember-me token flaws",
+      "notes": "predictable persistent cookies",
+      "desc": "Reverse-engineering persistent 'remember-me' cookies that rely on weak hashes, static usernames, base64-encoded timestamps, or unkeyed user identifiers.",
+      "prevention": "Issue high-entropy remember-me tokens, store only hashed tokens server-side, rotate on use, and revoke on logout."
+    },
+    {
+      "name": "Password reset poisoning",
+      "notes": "Host header injection",
+      "desc": "Manipulating the HTTP Host header during password reset requests, causing generated password recovery links emailed to victims to point directly to an attacker-controlled domain.",
+      "prevention": "Generate reset links from a configured trusted origin instead of request Host headers, and validate forwarded hosts."
+    },
+    {
+      "name": "Reset token predictability",
+      "notes": "sequential or weak PRNG",
+      "desc": "Generating password recovery tokens derived from predictable seeds (such as millisecond timestamps or sequential IDs), allowing adversaries to precalculate valid reset links.",
+      "prevention": "Use cryptographically random reset tokens with sufficient entropy, short expiry, and server-side single-use tracking."
+    },
+    {
+      "name": "Reset token leakage via Referer",
+      "notes": "third-party analytics leak",
+      "desc": "Leaking secret reset tokens to external services or CDN hosts via the HTTP Referer header when the password reset landing page embeds external images, fonts, or tracking scripts.",
+      "prevention": "Keep reset tokens out of URLs sent to third parties; use Referrer-Policy and avoid third-party content on reset pages."
+    },
+    {
+      "name": "Reset token reuse / no invalidation",
+      "notes": "perpetual token validity",
+      "desc": "Failing to revoke password reset tokens upon their initial usage or following a successful password change, allowing re-exploitation if intercepted.",
+      "prevention": "Invalidate reset tokens after use and when a new token is issued; expire outstanding tokens after password changes."
+    },
+    {
+      "name": "Security question weakness",
+      "notes": "OSINT discoverable answers",
+      "desc": "Relying on easily discoverable personal information (mother's maiden name, high school, pet name) for identity recovery that can be harvested from social media.",
+      "prevention": null
+    },
+    {
+      "name": "Account lockout bypass",
+      "notes": "case, whitespace, unicode",
+      "desc": "Bypassing brute-force account lockout counters by modifying username casing, appending null bytes, inserting whitespaces, or supplying Unicode homoglyphs that the authentication engine normalizes.",
+      "prevention": null
+    },
+    {
+      "name": "CAPTCHA bypass / reuse",
+      "notes": "static response replay",
+      "desc": "Replaying solved CAPTCHA response tokens, omitting the verification parameter entirely, or defeating automated puzzles using automated solvers or OCR.",
+      "prevention": null
+    },
+    {
+      "name": "Session fixation",
+      "notes": "pre-auth session adoption",
+      "desc": "Forcing a victim to adopt an attacker-known session identifier prior to authentication, which the server subsequently elevates to an authenticated state upon login without regenerating the token.",
+      "prevention": null
+    },
+    {
+      "name": "Auth bypass via forced browsing",
+      "notes": "unprotected internal routes",
+      "desc": "Directly navigating to privileged application pages and administrative controllers that fail to verify session status before rendering content or executing actions.",
+      "prevention": null
+    },
+    {
+      "name": "JWT alg: none",
+      "notes": "signature stripping",
+      "desc": "Altering the JSON Web Token header algorithm field to 'none' and stripping the signature block, tricking vulnerable verification libraries into accepting unsigned arbitrary claims.",
+      "prevention": null
+    },
+    {
+      "name": "JWT weak HMAC secret",
+      "notes": "hashcat cracking",
+      "desc": "Cracking symmetrically signed HS256 JWT tokens offline using dictionary and rule-based wordlists to recover the shared secret and forge arbitrary user claims.",
+      "prevention": null
+    },
+    {
+      "name": "JWT algorithm confusion",
+      "notes": "RS256 → HS256",
+      "desc": "Converting an asymmetric RS256 token verification check to symmetric HS256 by signing the token with the publicly available RSA public key treated as an HMAC secret.",
+      "prevention": null
+    },
+    {
+      "name": "JWT kid injection",
+      "notes": "path traversal, SQLi",
+      "desc": "Injecting path traversal sequences (e.g. ../../../dev/null) or SQL payloads into the 'kid' (Key ID) header parameter to force verification against a static or predictable cryptographic key.",
+      "prevention": null
+    },
+    {
+      "name": "JWT jku / x5u header injection",
+      "notes": "untrusted key URL",
+      "desc": "Supplying an attacker-hosted JWK Set URL within the 'jku' or 'x5u' header parameter to coerce the server into validating the token against an untrusted public key.",
+      "prevention": null
+    },
+    {
+      "name": "JWT expiry not validated",
+      "notes": "missing exp check",
+      "desc": "Accepting expired JWT tokens due to missing validation of the 'exp' claim in the server-side verification middleware.",
+      "prevention": null
+    },
+    {
+      "name": "JWT sub tampering",
+      "notes": "unsigned claim edit",
+      "desc": "Modifying the 'sub' (subject) or role claims inside tokens when backend services fail to verify token integrity signatures or rely on client-decoded tokens.",
+      "prevention": null
+    },
+    {
+      "name": "OAuth open redirect_uri",
+      "notes": "token theft",
+      "desc": "Exploiting unvalidated or wildcard redirect_uri parameters in OAuth authorization requests to redirect authorization codes or access tokens to an attacker-controlled server.",
+      "prevention": null
+    },
+    {
+      "name": "OAuth missing state / CSRF",
+      "notes": "account linkage CSRF",
+      "desc": "Failing to generate and validate unguessable 'state' parameters during OAuth handshakes, allowing an attacker to bind their own OAuth identity to an unsuspecting victim's application session.",
+      "prevention": null
+    },
+    {
+      "name": "OAuth implicit flow leakage",
+      "notes": "token in fragment",
+      "desc": "Employing the deprecated OAuth 2.0 Implicit Grant flow where access tokens are returned in URI fragments, exposing tokens to browser histories, script theft, and Referer headers.",
+      "prevention": null
+    },
+    {
+      "name": "OAuth scope escalation",
+      "notes": "requesting broader claims",
+      "desc": "Modifying authorization request scope parameters to request elevated permissions without receiving explicit re-authorization or consent from the resource owner.",
+      "prevention": null
+    },
+    {
+      "name": "SAML XML signature wrapping",
+      "notes": "XSW",
+      "desc": "Altering the XML structure of a SAML response by duplicating or repositioning signed assertions while injecting malicious forged assertions evaluated by the business logic.",
+      "prevention": null
+    },
+    {
+      "name": "SAML assertion forgery",
+      "notes": "unverified signature",
+      "desc": "Generating forged SAML assertions containing arbitrary user identities and administrative entitlements when the Service Provider omits cryptographic signature verification.",
+      "prevention": null
+    },
+    {
+      "name": "SSO misconfiguration",
+      "notes": "metadata & trust flaws",
+      "desc": "Flaws in single sign-on metadata exchange, insecure SAML entity IDs, or trusting unverified identity provider claims across enterprise integrations.",
+      "prevention": null
+    },
+    {
+      "name": "LDAP auth injection",
+      "notes": "filter manipulation",
+      "desc": "Injecting LDAP filter metacharacters into login forms (e.g. * or )(|(password=*)) ) to manipulate directory search criteria and achieve authentication bypass without valid credentials.",
+      "prevention": null
+    },
+    {
+      "name": "Login timing attack",
+      "notes": "side-channel latency",
+      "desc": "Measuring microsecond differences in server processing time during password hashing to distinguish between existing and non-existing accounts.",
+      "prevention": null
+    },
+    {
+      "name": "Auth race condition (TOCTOU)",
+      "notes": "concurrency window",
+      "desc": "Submitting concurrent authentication or registration requests to exploit Time-of-Check to Time-of-Use windows, leading to unauthorized state transitions.",
+      "prevention": null
+    },
+    {
+      "name": "Magic link / passwordless flaws",
+      "notes": "token leakage / brute force",
+      "desc": "Exploiting short lifetimes, unencrypted delivery, predictable token generation, or missing single-use flags in passwordless email or SMS magic login links.",
+      "prevention": null
+    },
+    {
+      "name": "Auth bypass via alternate paths",
+      "notes": "/admin, /ADMIN, //admin",
+      "desc": "Circumventing URL-based access filters and reverse proxy ACLs by altering path casing, doubling slashes, or appending dot segments (e.g. /ADMIN, //admin, /.;/admin).",
+      "prevention": null
+    },
+    {
+      "name": "Login CSRF",
+      "notes": "forced authentication",
+      "desc": "Tricking a user's browser into submitting attacker credentials to a target site, causing the victim's subsequent actions and private data to be captured under the attacker's account.",
+      "prevention": null
+    },
+    {
+      "name": "Password change without current password",
+      "notes": "session hijacking takeover",
+      "desc": "Permitting users to set a new password without validating their existing password, allowing an attacker with temporary session access to lock out the legitimate account owner permanently.",
+      "prevention": null
+    },
+    {
+      "name": "Phone/SMS verification bypass",
+      "notes": "parameter omission / response edit",
+      "desc": "Circumventing phone number confirmation steps by tampering with client parameters, spoofing API responses, or omitting validation flags in multi-step verification flows.",
+      "prevention": null
+    }
+  ],
+  "order": 3
+}

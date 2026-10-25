@@ -1,0 +1,45 @@
+name: Propose a new attack
+description: Request a distinct new catalog entry with a sourced description.
+title: "New attack: "
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Attack name
+      placeholder: A clear, commonly used name
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Suggested section
+      placeholder: Authentication, Injection, Cloud, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Accurate description
+      description: Explain the mechanism, required conditions, and impact in plain language.
+    validations:
+      required: true
+  - type: textarea
+    id: prevention
+    attributes:
+      label: Prevention, if known
+      description: Describe a concrete control, or leave this empty for a later contribution.
+  - type: input
+    id: source
+    attributes:
+      label: Supporting source
+      description: Link a standard, official guidance, or original research.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: distinction
+    attributes:
+      label: Why is this distinct?
+      description: Mention any existing entry that might overlap.
+    validations:
+      required: true

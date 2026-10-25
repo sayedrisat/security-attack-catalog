@@ -1,0 +1,159 @@
+{
+  "id": "logic",
+  "title": "Business Logic",
+  "description": "Exploitation of application workflow flaws, transactional assumptions, race conditions, and economic/state-machine loopholes.",
+  "icon": "briefcase",
+  "attacks": [
+    {
+      "name": "Price manipulation",
+      "notes": "negative, zero, decimal",
+      "desc": "Modifying item price values in checkout requests (submitting negative numbers, zero, or fractional decimals) when backend handlers fail to validate prices against the database.",
+      "prevention": "Calculate prices from trusted server-side product records and reject negative or unexpected totals."
+    },
+    {
+      "name": "Quantity abuse",
+      "notes": "negative / overflow",
+      "desc": "Submitting negative or zero quantities during e-commerce cart calculation to offset totals or manipulate financial ledger summaries.",
+      "prevention": "Validate quantity ranges on the server and use safe numeric types that cannot wrap silently."
+    },
+    {
+      "name": "Coupon / discount abuse",
+      "notes": "reuse, stacking",
+      "desc": "Applying single-use promotional discount codes repeatedly, stacking incompatible promotional codes, or bypassing minimum spending thresholds.",
+      "prevention": "Bind coupons to eligibility rules, enforce usage limits atomically, and define stacking behavior explicitly."
+    },
+    {
+      "name": "Currency confusion",
+      "notes": "mismatched currency codes",
+      "desc": "Altering currency symbols or identifiers (e.g. paying 100 JPY instead of 100 USD) where the payment gateway processes the lower monetary value while the application fulfills the higher value order.",
+      "prevention": "Normalize currency and minor units before calculation, and never trust a client-supplied currency conversion."
+    },
+    {
+      "name": "Race condition — double spend",
+      "notes": "concurrent balance deduction",
+      "desc": "Sending concurrent parallel checkout or withdrawal requests within a microsecond window to withdraw balances multiple times before the database record updates.",
+      "prevention": "Update balances atomically in one transaction or guarded operation, with idempotency for retries."
+    },
+    {
+      "name": "Race condition — double vote",
+      "notes": "concurrent ballot submission",
+      "desc": "Exploiting non-atomic database checks by submitting concurrent voting requests, allowing users to register multiple votes before the user-has-voted flag is set.",
+      "prevention": "Record each vote atomically against a unique voter/action key so concurrent requests cannot create duplicates."
+    },
+    {
+      "name": "TOCTOU",
+      "notes": "Time-of-Check to Time-of-Use",
+      "desc": "Exploiting the timing gap between when a security permission or resource availability is verified and when the corresponding transaction or modification is committed.",
+      "prevention": "Perform validation and state changes in one transaction or lock the affected resource across the operation."
+    },
+    {
+      "name": "Workflow step bypass",
+      "notes": "skipping verification steps",
+      "desc": "Skipping mandatory verification or payment steps in multi-step onboarding, checkout, or KYC workflows by navigating directly to final confirmation endpoints.",
+      "prevention": "Track workflow state on the server and reject steps submitted before their required predecessors."
+    },
+    {
+      "name": "Workflow reordering",
+      "notes": "altering state sequence",
+      "desc": "Executing workflow actions in an unexpected chronological order (such as applying a payment confirmation after clearing a cart) to induce invalid business state.",
+      "prevention": "Require a valid server-side state transition for every step, independent of the order sent by the client."
+    },
+    {
+      "name": "Refund abuse",
+      "notes": "multiple refund triggers",
+      "desc": "Exploiting logic flaws in return and refund processes to trigger multiple refunds for a single purchase or receive refunds while retaining digital items.",
+      "prevention": null
+    },
+    {
+      "name": "Free trial abuse",
+      "notes": "unlimited trial recycling",
+      "desc": "Repeatedly signing up for complimentary trial periods by altering email alias permutations, disposable card details, or machine fingerprints.",
+      "prevention": null
+    },
+    {
+      "name": "Rate limit bypass",
+      "notes": "header, case, IP rotate",
+      "desc": "Circumventing API request limits by spoofing proxy headers (X-Forwarded-For, X-Real-IP), varying endpoint casing, or distributing requests across IP rotations.",
+      "prevention": null
+    },
+    {
+      "name": "Inventory oversell",
+      "notes": "race condition cart reservation",
+      "desc": "Submitting simultaneous checkout requests to purchase scarce inventory items beyond available stock levels due to missing pessimistic/optimistic database locks.",
+      "prevention": null
+    },
+    {
+      "name": "Referral abuse",
+      "notes": "self-referral bonus farming",
+      "desc": "Automating account registration pipelines to claim referral bonuses, signup credits, and affiliate rewards by referring synthetic user accounts.",
+      "prevention": null
+    },
+    {
+      "name": "Loyalty point abuse",
+      "notes": "reward balance manipulation",
+      "desc": "Exploiting rounding errors, cancellation loopholes, or order reversals where loyalty points earned on a purchase remain credited after the purchase is canceled.",
+      "prevention": null
+    },
+    {
+      "name": "Integer overflow in quantity",
+      "notes": "integer boundary wrap",
+      "desc": "Submitting integers exceeding 32-bit or 64-bit bounds in quantity fields to wrap calculations to negative numbers or small positive values, reducing invoice totals.",
+      "prevention": null
+    },
+    {
+      "name": "Object ID recycling",
+      "notes": "stale reference reassignment",
+      "desc": "Claiming newly generated objects that reuse deleted historical entity IDs, inadvertently inheriting permissions or historical audit associations from previous entities.",
+      "prevention": null
+    },
+    {
+      "name": "Multi-step form tampering",
+      "notes": "interleaved session state",
+      "desc": "Modifying parameters submitted in intermediate form steps to corrupt application state stored in user sessions or database draft records.",
+      "prevention": null
+    },
+    {
+      "name": "CAPTCHA reuse",
+      "notes": "solved token replay",
+      "desc": "Replaying a single verified CAPTCHA solution across multiple subsequent business transactions when the server fails to invalidate the solution immediately after first verification.",
+      "prevention": null
+    },
+    {
+      "name": "Vote / reaction manipulation",
+      "notes": "unconstrained rating amplification",
+      "desc": "Artificially inflating product reviews, public polls, or post upvotes by rotating client session tokens or exploiting missing IP/account deduplication.",
+      "prevention": null
+    },
+    {
+      "name": "API pagination abuse",
+      "notes": "huge limit values",
+      "desc": "Passing massive integer values in pagination limit parameters (e.g. ?limit=1000000) to force the backend to fetch and serialize huge datasets, degrading service performance.",
+      "prevention": null
+    },
+    {
+      "name": "Under-fetching / partial trust",
+      "notes": "client-supplied calculations",
+      "desc": "Relying on client-calculated tax rates, shipping fees, or line-item totals submitted in payloads rather than performing calculations authoritatively on the server.",
+      "prevention": null
+    },
+    {
+      "name": "Time-based logic abuse",
+      "notes": "client clock tampering",
+      "desc": "Exploiting business logic that relies on client-supplied timestamps or timezone data to manipulate time-sensitive discounts, auction bidding, or scheduled releases.",
+      "prevention": null
+    },
+    {
+      "name": "Rounding / float precision abuse",
+      "notes": "fractional cent accumulation",
+      "desc": "Exploiting IEEE 754 floating-point inaccuracies or improper integer conversion in monetary calculations to skim fractional currency across numerous transactions.",
+      "prevention": null
+    },
+    {
+      "name": "Email/SMS cost abuse",
+      "notes": "toll fraud & telecommunication exhaustion",
+      "desc": "Automating requests to endpoints triggering international SMS or telephone OTP delivery, draining corporate communication budgets via premium-rate telephone numbers.",
+      "prevention": null
+    }
+  ],
+  "order": 9
+}
