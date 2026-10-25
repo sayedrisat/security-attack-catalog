@@ -3,7 +3,6 @@ import catalog from './data/catalog.js';
 import { BrandIcon, Icon } from './components/Icons.jsx';
 
 const REPO_URL = 'https://github.com/sayedrisat/security-attack-catalog';
-const GITHUB_URL = 'https://github.com/sayedrisat';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/risatdev/';
 const totalEntries = catalog.reduce((sum, category) => sum + category.attacks.length, 0);
 const preventionCount = catalog.reduce((sum, category) => sum + category.attacks.filter((attack) => Boolean(attack.prevention)).length, 0);
@@ -171,13 +170,6 @@ export default function App() {
           <div className="hero-eyebrow"><span>Web Application Security</span><span>•</span><span>Threat Modeling</span><span>•</span><span>Community Maintained</span></div>
           <h1 className="hero-title">The <span className="gradient-text">Web &amp; Infrastructure</span> Attack Catalog</h1>
           <p className="hero-subtitle">A searchable reference to security attacks, clear descriptions, and practical prevention guidance. Help make every entry more useful.</p>
-          <div className="hero-author-card">
-            <div className="author-meta"><span className="author-avatar">SR</span><span className="author-meta-text"><strong className="author-name">Started by Sayed Risat</strong><span className="author-role">Growing with contributors</span></span></div>
-            <div className="author-actions">
-              <SocialLink network="github" href={REPO_URL} className="btn-follow btn-github">Contribute on GitHub</SocialLink>
-              <SocialLink network="linkedin" href={LINKEDIN_URL} className="btn-follow btn-linkedin">Connect on LinkedIn</SocialLink>
-            </div>
-          </div>
           <div className="metrics-bar">
             <div className="metric-card"><div className="metric-val">{totalEntries}</div><div className="metric-lbl">Attack Entries</div></div>
             <div className="metric-card"><div className="metric-val">{catalog.length}</div><div className="metric-lbl">Security Sections</div></div>
@@ -187,6 +179,10 @@ export default function App() {
             <span><strong>{coveragePercent}% prevention coverage</strong> · {preventionCount} entries have guidance</span>
             <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">Help finish the rest <span aria-hidden="true">↗</span></a>
           </div>
+          <a className="hero-credit" href="https://github.com/sayedrisat" target="_blank" rel="noopener noreferrer" aria-label="Sayed Risat on GitHub">
+            <img src={`${import.meta.env.BASE_URL}sayed-risat.png`} width="36" height="36" alt="Sayed Risat" />
+            <span><small>Started by</small><strong>Sayed Risat</strong></span>
+          </a>
         </div>
       </section>
 
@@ -222,10 +218,9 @@ export default function App() {
 
       <footer className="footer">
         <div className="container">
-          <div className="footer-showcase">
-            <div className="footer-avatar">SR</div><div className="footer-curator">Started by Sayed Risat · Improved by contributors</div><h2 className="footer-name">Help expand the catalog</h2>
-            <p className="footer-bio">Add a well-sourced attack, improve a description, or write prevention guidance. Every change is reviewed through a GitHub pull request.</p>
-            <div className="footer-actions"><SocialLink network="github" href={REPO_URL} className="footer-btn footer-btn-github">View the project</SocialLink><a className="footer-btn footer-btn-linkedin" href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">Contribution guide <span aria-hidden="true">↗</span></a></div>
+          <div className="footer-simple">
+            <div><h2>Help expand the catalog</h2><p>Add an attack, improve a description, or contribute prevention guidance.</p></div>
+            <div className="footer-simple-actions"><a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">Contribution guide <span aria-hidden="true">↗</span></a><a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub project</a></div>
           </div>
           <div className="footer-bottom"><span>© {new Date().getFullYear()} Sayed Risat and contributors. MIT licensed.</span><span className="disclaimer">Educational and defensive reference. Test systems only with authorization.</span></div>
         </div>

@@ -1091,6 +1091,32 @@
     .coverage-callout a { font-weight: 600; }
     .coverage-dot { width: 8px; height: 8px; border-radius: 50%; background: #30a46c; box-shadow: 0 0 0 4px rgba(48,164,108,.12); }
 
+    .hero-credit {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: max-content;
+      margin: 27px 0 0 auto;
+      padding: 5px 10px 5px 5px;
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      text-align: left;
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-credit:hover { color: var(--text-primary); border-color: var(--text-accent); }
+    .hero-credit img { width: 36px; height: 36px; object-fit: cover; border-radius: 50%; background: #000; }
+    .hero-credit span { display: flex; flex-direction: column; line-height: 1.15; }
+    .hero-credit small { font-size: 10px; color: var(--text-tertiary); }
+    .hero-credit strong { margin-top: 2px; font-size: 11px; font-weight: 700; }
+
+    .footer { padding: 42px 0 28px; margin-top: 50px; }
+    .footer-simple { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 40px; }
+    .footer-simple h2 { font-size: 22px; letter-spacing: -.03em; }
+    .footer-simple p { max-width: 520px; margin-top: 5px; color: var(--text-secondary); font-size: 14px; }
+    .footer-simple-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; font-weight: 700; }
+
     .filter-row { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
     .filter-row .category-pills { flex: 1; min-width: 0; }
     .needs-filter {
@@ -1146,4 +1172,6 @@
       .coverage-callout { line-height: 1.5; }
       .brand-tag { display: none; }
       .catalog-section { scroll-margin-top: 220px; }
+      .hero-credit { margin-top: 24px; }
+      .footer-simple { align-items: flex-start; flex-direction: column; }
     }
