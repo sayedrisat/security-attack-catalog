@@ -2,6 +2,8 @@
 
 Thanks for improving the Security Attack Catalog. Focused pull requests are easiest to review and merge.
 
+Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities in this repository or live site through the [security policy](SECURITY.md), not a public issue. Corrections to catalog content belong in the public correction form.
+
 ## Good contributions
 
 - Add one distinct attack with an accurate, concise description.

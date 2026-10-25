@@ -1,6 +1,7 @@
 name: Propose a new attack
 description: Request a distinct new catalog entry with a sourced description.
 title: "New attack: "
+labels: ["catalog:new-attack"]
 body:
   - type: input
     id: name

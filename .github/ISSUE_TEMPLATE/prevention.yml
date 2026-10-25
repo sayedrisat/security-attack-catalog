@@ -1,6 +1,7 @@
 name: Add prevention guidance
 description: Suggest a concrete defense for an entry that needs one.
 title: "Prevention: "
+labels: ["catalog:prevention"]
 body:
   - type: input
     id: attack

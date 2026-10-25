@@ -1,6 +1,7 @@
 name: Correct an entry
 description: Report a misleading, duplicate, or inaccurate catalog entry.
 title: "Correction: "
+labels: ["catalog:correction"]
 body:
   - type: input
     id: entry

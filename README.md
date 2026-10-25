@@ -1,10 +1,15 @@
 # Security Attack Catalog
 
-A community-maintained catalog of web, browser, infrastructure, cloud, and business-logic attacks. Each entry has a plain-language description. The project is adding concise, actionable prevention guidance with help from contributors.
+[![Validate catalog](https://github.com/sayedrisat/security-attack-catalog/actions/workflows/ci.yml/badge.svg)](https://github.com/sayedrisat/security-attack-catalog/actions/workflows/ci.yml)
+[![Deploy GitHub Pages](https://github.com/sayedrisat/security-attack-catalog/actions/workflows/deploy.yml/badge.svg)](https://github.com/sayedrisat/security-attack-catalog/actions/workflows/deploy.yml)
+
+A community-driven catalog of web, API, cloud, and infrastructure attacks with clear explanations and practical prevention guidance. Each entry can be improved through a reviewed contribution.
 
 **Live site:** https://sayedrisat.github.io/security-attack-catalog/
 
 Started by [Sayed Risat](https://github.com/sayedrisat). Contributions are reviewed through pull requests.
+
+For project vulnerabilities, use [private vulnerability reporting](SECURITY.md). For catalog corrections, use the public [correction form](https://github.com/sayedrisat/security-attack-catalog/issues/new?template=correction.yml). Contributors agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Current coverage
 
