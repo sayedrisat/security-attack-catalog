@@ -19,6 +19,22 @@ For project vulnerabilities, use [private vulnerability reporting](SECURITY.md).
 
 The site lets readers search by attack, section, description, tool, or prevention; filter by section; and show entries that still need prevention guidance. It follows the system light or dark setting unless a visitor chooses a theme.
 
+## Architecture and validation
+
+```mermaid
+flowchart LR
+  data[Category JSON files] --> validate[Catalog validator]
+  data --> catalog[Vite eager imports and section ordering]
+  catalog --> ui[React search and filters]
+  validate --> build[Production build]
+  ui --> build
+  build --> pages[GitHub Pages]
+```
+
+[`scripts/validate-catalog.mjs`](scripts/validate-catalog.mjs) checks section identities and ordering, file names, duplicate entries within a section, required text, and prevention-field structure. [`src/data/catalog.js`](src/data/catalog.js) assembles the sections for [`src/App.jsx`](src/App.jsx). There is no database, login flow, or external API requirement.
+
+`npm run check` validates data structure; it does not independently establish the accuracy of a security claim. Review sources and the affected stack when adding prevention advice. `npm run build` includes the data validator before bundling the site. Automated interaction tests are not currently configured.
+
 ## Contribute
 
 You can propose a [new attack](https://github.com/sayedrisat/security-attack-catalog/issues/new?template=new-attack.yml), [prevention guidance](https://github.com/sayedrisat/security-attack-catalog/issues/new?template=prevention.yml), or a [correction](https://github.com/sayedrisat/security-attack-catalog/issues/new?template=correction.yml). A pull request with the data change is welcome too. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the file format and review criteria.
@@ -50,6 +66,8 @@ Run `npm run check` to validate catalog structure and `npm run build` to create 
 ## Deployment
 
 The site uses React and Vite. GitHub Actions builds and deploys `dist/` to GitHub Pages after a change lands on `main`. Vite uses `/security-attack-catalog/` as its production base path on Pages. Pull requests run catalog validation and a production build before merge.
+
+For a local build with the same base path as Pages, run `GITHUB_PAGES=true npm run build`. Ordinary local hosting uses `npm run build`. No API keys or runtime secrets are required; `GITHUB_PAGES` only selects Vite's asset base path.
 
 ## Scope and safety
 
