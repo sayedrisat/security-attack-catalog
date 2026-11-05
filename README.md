@@ -33,7 +33,7 @@ flowchart LR
 
 [`scripts/validate-catalog.mjs`](scripts/validate-catalog.mjs) checks section identities and ordering, file names, duplicate entries within a section, required text, and prevention-field structure. [`src/data/catalog.js`](src/data/catalog.js) assembles the sections for [`src/App.jsx`](src/App.jsx). There is no database, login flow, or external API requirement.
 
-`npm run check` validates data structure; it does not independently establish the accuracy of a security claim. Review sources and the affected stack when adding prevention advice. `npm run build` includes the data validator before bundling the site. Automated interaction tests are not currently configured.
+`npm run check` validates data structure; it does not independently establish the accuracy of a security claim. Review sources and the affected stack when adding prevention advice. `npm run build` includes the data validator before bundling the site. `npm test` exercises the existing validator against isolated valid/invalid fixtures: coverage reporting, duplicate names, missing prevention fields, malformed JSON, filename identities, and forbidden legacy ratings. It does not edit the real catalog. Automated browser interaction tests are not currently configured.
 
 ## Contribute
 
@@ -61,11 +61,11 @@ npm ci
 npm run dev
 ```
 
-Run `npm run check` to validate catalog structure and `npm run build` to create the production site in `dist/`.
+Run `npm test` for validator regression tests, `npm run check` to validate the real catalog, and `npm run build` to create the production site in `dist/`. No test dependency or environment secret is required.
 
 ## Deployment
 
-The site uses React and Vite. GitHub Actions builds and deploys `dist/` to GitHub Pages after a change lands on `main`. Vite uses `/security-attack-catalog/` as its production base path on Pages. Pull requests run catalog validation and a production build before merge.
+The site uses React and Vite. GitHub Actions builds and deploys `dist/` to GitHub Pages after a change lands on `main`. Vite uses `/security-attack-catalog/` as its production base path on Pages. Pull requests run validator regression tests, real-catalog validation and a production build before merge.
 
 For a local build with the same base path as Pages, run `GITHUB_PAGES=true npm run build`. Ordinary local hosting uses `npm run build`. No API keys or runtime secrets are required; `GITHUB_PAGES` only selects Vite's asset base path.
 

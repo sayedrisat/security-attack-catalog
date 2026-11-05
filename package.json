@@ -7,7 +7,8 @@
     "dev": "vite",
     "check": "node scripts/validate-catalog.mjs",
     "build": "npm run check && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test tests/validate-catalog.test.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",
